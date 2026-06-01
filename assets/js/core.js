@@ -1,0 +1,315 @@
+/* =====================================================================
+   CORE.JS — interface runtime for the Ali Hussein engineering portfolio
+   Vanilla JS, zero dependencies. Resilient to CDN failures.
+   ===================================================================== */
+(function () {
+  "use strict";
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isTouch = window.matchMedia("(max-width: 860px)").matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+  /* -------------------------------------------------- BOOT SEQUENCE */
+  (function boot() {
+    const el = $("#boot");
+    if (!el) return;
+    const log = $(".boot-log", el);
+    const bar = $(".boot-bar i", el);
+    const lines = [
+      "INITIALIZING ENGINEERING INTERFACE",
+      "MOUNTING DIGITAL SYSTEMS . . .",
+      "LOADING RTL / VERILOG MODULES",
+      "EMBEDDED ARCHITECTURE READY",
+      "AI ASSISTANT ACTIVE",
+      "SYSTEM ONLINE",
+    ];
+    let i = 0, p = 0;
+    // skip a long boot on repeat visits within session
+    const seen = sessionStorage.getItem("ah_boot");
+    const total = seen ? 600 : 2100;
+    const step = total / lines.length;
+    const tick = setInterval(() => {
+      if (log && lines[i]) log.textContent = lines[i];
+      i++;
+      if (i >= lines.length) clearInterval(tick);
+    }, step);
+    const pr = setInterval(() => {
+      p = Math.min(100, p + (seen ? 9 : 3.2));
+      if (bar) bar.style.width = p + "%";
+      if (p >= 100) clearInterval(pr);
+    }, 40);
+    setTimeout(() => {
+      el.classList.add("done");
+      sessionStorage.setItem("ah_boot", "1");
+      document.body.style.overflow = "";
+      window.dispatchEvent(new Event("boot:done"));
+    }, total + 250);
+    document.body.style.overflow = "hidden";
+  })();
+
+  /* -------------------------------------------------- CUSTOM CURSOR */
+  if (!isTouch && !reduce) {
+    const dot = document.createElement("div");
+    const ring = document.createElement("div");
+    dot.className = "cursor-dot"; ring.className = "cursor-ring";
+    document.body.append(dot, ring);
+    let mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+    addEventListener("mousemove", e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    });
+    (function follow() {
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+      requestAnimationFrame(follow);
+    })();
+    const hot = "a,button,.proj,.gal .it,.chip,input,textarea,.contact-line";
+    document.addEventListener("mouseover", e => {
+      if (e.target.closest(hot)) ring.classList.add("hot");
+    });
+    document.addEventListener("mouseout", e => {
+      if (e.target.closest(hot)) ring.classList.remove("hot");
+    });
+  }
+
+  /* -------------------------------------------------- PARTICLE FIELD */
+  (function particles() {
+    const c = $("#bg-canvas");
+    if (!c || reduce) return;
+    const ctx = c.getContext("2d");
+    let w, h, pts = [], mouse = { x: -999, y: -999 };
+    const COUNT = isTouch ? 34 : 70;
+    function size() {
+      w = c.width = innerWidth * devicePixelRatio;
+      h = c.height = innerHeight * devicePixelRatio;
+      c.style.width = innerWidth + "px"; c.style.height = innerHeight + "px";
+    }
+    function seed() {
+      pts = Array.from({ length: COUNT }, () => ({
+        x: Math.random() * w, y: Math.random() * h,
+        vx: (Math.random() - .5) * .25 * devicePixelRatio,
+        vy: (Math.random() - .5) * .25 * devicePixelRatio,
+        r: (Math.random() * 1.4 + .5) * devicePixelRatio,
+      }));
+    }
+    size(); seed();
+    addEventListener("resize", () => { size(); seed(); });
+    addEventListener("mousemove", e => {
+      mouse.x = e.clientX * devicePixelRatio; mouse.y = e.clientY * devicePixelRatio;
+    });
+    const LINK = 130 * devicePixelRatio, PULL = 150 * devicePixelRatio;
+    function frame() {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+        const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy);
+        if (d < PULL) { p.x += dx / d * .6; p.y += dy / d * .6; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, 7);
+        ctx.fillStyle = "rgba(127,227,255,.55)";
+        ctx.fill();
+      }
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const a = pts[i], b = pts[j];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if (dist < LINK) {
+            const o = (1 - dist / LINK) * .35;
+            ctx.strokeStyle = `rgba(120,150,210,${o})`;
+            ctx.lineWidth = devicePixelRatio * .6;
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+    frame();
+  })();
+
+  /* -------------------------------------------------- SMOOTH SCROLL (inertia) */
+  (function smooth() {
+    if (reduce || isTouch) return;
+    let target = window.scrollY, current = window.scrollY, raf = null, active = false;
+    const ease = 0.085;
+    function loop() {
+      current += (target - current) * ease;
+      if (Math.abs(target - current) < 0.4) { current = target; active = false; }
+      window.scrollTo(0, current);
+      if (active) raf = requestAnimationFrame(loop); else raf = null;
+    }
+    addEventListener("wheel", e => {
+      if (e.ctrlKey) return;
+      const open = $(".nav-links.open");
+      if (open) return;
+      e.preventDefault();
+      target = Math.max(0, Math.min(target + e.deltaY,
+        document.documentElement.scrollHeight - innerHeight));
+      if (!active) { active = true; current = window.scrollY; loop(); }
+    }, { passive: false });
+    addEventListener("scroll", () => { if (!active) { target = window.scrollY; } });
+  })();
+
+  /* -------------------------------------------------- NAV */
+  (function nav() {
+    const nav = $(".nav");
+    const burger = $(".burger");
+    const links = $(".nav-links");
+    if (nav) addEventListener("scroll", () => {
+      nav.classList.toggle("shrink", window.scrollY > 60);
+    });
+    if (burger && links) {
+      burger.addEventListener("click", () => {
+        burger.classList.toggle("open");
+        links.classList.toggle("open");
+      });
+      $$("a", links).forEach(a => a.addEventListener("click", () => {
+        burger.classList.remove("open"); links.classList.remove("open");
+      }));
+    }
+  })();
+
+  /* -------------------------------------------------- REVEAL ON SCROLL */
+  (function reveal() {
+    const els = $$(".reveal");
+    if (!els.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.classList.add("show");
+          // animate skill bars within
+          $$(".bar .track i", en.target).forEach(b => {
+            if (b.dataset.fill) b.style.width = b.dataset.fill + "%";
+          });
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+    els.forEach(el => io.observe(el));
+  })();
+
+  /* -------------------------------------------------- TYPEWRITER (hero) */
+  (function typer() {
+    const el = $("[data-type]");
+    if (!el) return;
+    let phrases;
+    try { phrases = JSON.parse(el.dataset.type); } catch { return; }
+    const caret = '<span class="caret">▋</span>';
+    let pi = 0, ci = 0, del = false;
+    function tick() {
+      const full = phrases[pi];
+      ci += del ? -1 : 1;
+      el.innerHTML = full.slice(0, ci) + caret;
+      let wait = del ? 38 : 70;
+      if (!del && ci === full.length) { wait = 1700; del = true; }
+      else if (del && ci === 0) { del = false; pi = (pi + 1) % phrases.length; wait = 320; }
+      setTimeout(tick, wait);
+    }
+    if (reduce) { el.innerHTML = phrases[0] + caret; return; }
+    setTimeout(tick, 400);
+  })();
+
+  /* -------------------------------------------------- COUNT-UP STATS */
+  (function counters() {
+    const els = $$("[data-count]");
+    if (!els.length) return;
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target, end = parseFloat(el.dataset.count);
+      const suf = el.dataset.suffix || "", dur = 1400; let t0 = null;
+      function run(t) {
+        if (!t0) t0 = t;
+        const p = Math.min((t - t0) / dur, 1);
+        const v = end * (1 - Math.pow(1 - p, 3));
+        el.textContent = (end % 1 ? v.toFixed(2) : Math.round(v)) + suf;
+        if (p < 1) requestAnimationFrame(run);
+      }
+      requestAnimationFrame(run); io.unobserve(el);
+    }), { threshold: .5 });
+    els.forEach(el => io.observe(el));
+  })();
+
+  /* -------------------------------------------------- HERO BIG-TYPE PARALLAX */
+  (function bigtype() {
+    const spans = $$(".hero-bigtype span");
+    if (!spans.length || reduce || isTouch) return;
+    addEventListener("mousemove", e => {
+      const cx = (e.clientX / innerWidth - .5);
+      spans.forEach((s, i) => {
+        s.style.setProperty("--px", (cx * (14 + i * 10)) + "px");
+      });
+    });
+  })();
+
+  /* -------------------------------------------------- LIGHTBOX */
+  (function lightbox() {
+    const items = $$("[data-lightbox]");
+    if (!items.length) return;
+    const box = document.createElement("div");
+    box.id = "lightbox";
+    box.innerHTML = '<span class="x mono">[ ESC / CLICK TO CLOSE ]</span><img alt="">';
+    document.body.appendChild(box);
+    const img = $("img", box);
+    items.forEach(it => it.addEventListener("click", () => {
+      const src = it.dataset.lightbox || $("img", it)?.src;
+      if (!src) return;
+      img.src = src; box.classList.add("open");
+    }));
+    const close = () => box.classList.remove("open");
+    box.addEventListener("click", close);
+    addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  })();
+
+  /* -------------------------------------------------- NEURAL CANVAS (assistant) */
+  (function neural() {
+    const c = $("#neural-canvas");
+    if (!c || reduce) return;
+    const ctx = c.getContext("2d");
+    let w, h, nodes = [];
+    function size() {
+      const r = c.parentElement.getBoundingClientRect();
+      w = c.width = r.width * devicePixelRatio;
+      h = c.height = r.height * devicePixelRatio;
+    }
+    function seed() {
+      const cols = 4, rows = 5; nodes = [];
+      for (let i = 0; i < cols; i++)
+        for (let j = 0; j < rows; j++)
+          nodes.push({
+            x: (w / (cols + 1)) * (i + 1), y: (h / (rows + 1)) * (j + 1),
+            col: i, base: (h / (rows + 1)) * (j + 1),
+            ph: Math.random() * 6.28, r: (Math.random() * 1.6 + 1.4) * devicePixelRatio
+          });
+    }
+    size(); seed();
+    new ResizeObserver(() => { size(); seed(); }).observe(c.parentElement);
+    let t = 0;
+    function frame() {
+      t += 0.012; ctx.clearRect(0, 0, w, h);
+      nodes.forEach(n => n.y = n.base + Math.sin(t + n.ph) * 9 * devicePixelRatio);
+      for (const a of nodes) for (const b of nodes) {
+        if (b.col === a.col + 1) {
+          const o = 0.10 + 0.10 * Math.abs(Math.sin(t + a.ph));
+          ctx.strokeStyle = `rgba(127,227,255,${o})`;
+          ctx.lineWidth = devicePixelRatio * .55;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+      nodes.forEach(n => {
+        const g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 4);
+        g.addColorStop(0, "rgba(127,227,255,.9)");
+        g.addColorStop(1, "rgba(127,227,255,0)");
+        ctx.fillStyle = g; ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 4, 0, 7); ctx.fill();
+        ctx.fillStyle = "#bfeeff"; ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, 7); ctx.fill();
+      });
+      requestAnimationFrame(frame);
+    }
+    frame();
+  })();
+
+  /* current year */
+  $$("[data-year]").forEach(e => e.textContent = new Date().getFullYear());
+})();

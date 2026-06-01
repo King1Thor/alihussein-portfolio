@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects — Ali Hussein</title>
+  <meta name="description" content="Hardware and systems projects by Ali Hussein: 4-bit ALU, single-cycle ARMv8 CPU, LRU cache simulator, FPGA combination lock, motion sensor alarm, and more.">
+  <link rel="icon" href="assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <div id="boot">
+    <div class="boot-mark">ALI&nbsp;·&nbsp;HUSSEIN</div>
+    <div class="boot-ring"></div>
+    <div class="boot-log">INITIALIZING ENGINEERING INTERFACE</div>
+    <div class="boot-bar"><i></i></div>
+  </div>
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-aura"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-noise"></div>
+  <div class="shell">
+  <nav class="nav">
+    <a class="brand" href="index.html">
+      <span class="logo"><span>AH</span></span>
+      <span class="who"><span class="n">Ali Hussein</span><span class="r">Systems Engineer</span></span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a class="active" href="projects.html">Projects</a>
+      <a href="skills.html">Skills</a>
+      <a href="experience.html">Experience</a>
+      <a href="index.html#assistant">AI Assistant</a>
+      <a class="nav-cta" href="contact.html">Contact</a>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
+  </nav>
+
+  <header class="banner wrap">
+    <div class="eyebrow reveal show">// PROJECT COMMAND CENTER</div>
+    <h1 class="reveal show d1">Systems I've <span class="grad">designed &amp; verified</span></h1>
+    <p class="lead reveal show d2">From combinational logic to full ARMv8 datapaths and memory-system simulators. Each card expands on hover &mdash; status indicators show what's been validated on hardware.</p>
+  </header>
+
+  <section style="padding-top:36px;">
+    <div class="wrap">
+      <div class="proj-grid">
+
+        <article class="glass proj reveal" data-lightbox="assets/img/alu.jpeg">
+          <div class="ph"><img src="assets/img/alu.jpeg" alt="4-bit ALU">
+            <div class="badge"><span class="stat"><span class="d"></span> VERIFIED ON HARDWARE</span></div><span class="num">01</span></div>
+          <div class="body">
+            <div class="kind">Digital Logic &middot; Combinational</div>
+            <h3>4-Bit Arithmetic Logic Unit <span class="arrow">&#8599;</span></h3>
+            <p>A functional 4-bit ALU built from modular blocks: multiplexers route operations by control input, full adders provide the arithmetic core, and four LEDs display the result bits for immediate visual verification.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>Full Adders</span><span>4:1 MUX</span><span>Carry Propagation</span><span>LED Readout</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">4-bit</div><div class="l">Word Width</div></div>
+                <div class="m"><div class="v">MUX+FA</div><div class="l">Architecture</div></div>
+                <div class="m"><div class="v">Visual</div><div class="l">Verification</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal d1" data-lightbox="assets/img/armv8_whiteboard.jpeg">
+          <div class="ph"><img src="assets/img/armv8_whiteboard.jpeg" alt="ARMv8 datapath">
+            <div class="badge"><span class="stat r"><span class="d"></span> TEAM PROJECT</span></div><span class="num">02</span></div>
+          <div class="body">
+            <div class="kind">Computer Architecture</div>
+            <h3>Single-Cycle ARMv8 CPU <span class="arrow">&#8599;</span></h3>
+            <p>Contributed to the design and integration of a single-cycle ARMv8 datapath spanning fetch, decode, register file, ALU, memory, and write-back &mdash; plus control-unit logic for R-type, load/store, and branch behavior, validated through directed instruction testing.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>ARMv8 ISA</span><span>Control Unit</span><span>Datapath Tracing</span><span>Verilog</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">5-stage</div><div class="l">Datapath</div></div>
+                <div class="m"><div class="v">R/D/B</div><div class="l">Instr. Types</div></div>
+                <div class="m"><div class="v">Directed</div><div class="l">Testing</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal" data-lightbox="assets/img/breadboard_signal.jpeg">
+          <div class="ph"><img src="assets/img/breadboard_signal.jpeg" alt="Cache simulator concept circuit">
+            <div class="badge"><span class="stat"><span class="d"></span> VERIFIED</span></div><span class="num">03</span></div>
+          <div class="body">
+            <div class="kind">Memory Systems &middot; C++</div>
+            <h3>LRU Cache Simulator <span class="arrow">&#8599;</span></h3>
+            <p>A configurable set-associative cache simulator reporting hit and miss statistics from memory traces. Designed an O(1) LRU replacement policy backed by a hash map and doubly linked list to study miss-rate tradeoffs across configurations.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>C++</span><span>Set-Associative</span><span>Hash Map + DLL</span><span>Trace Analysis</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">O(1)</div><div class="l">Replacement</div></div>
+                <div class="m"><div class="v">Configurable</div><div class="l">Associativity</div></div>
+                <div class="m"><div class="v">Hit/Miss</div><div class="l">Reporting</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal d1" data-lightbox="assets/img/breadboard_output.jpeg">
+          <div class="ph"><img src="assets/img/breadboard_output.jpeg" alt="Motion sensor alarm circuit">
+            <div class="badge"><span class="stat r"><span class="d"></span> TEAM PROJECT</span></div><span class="num">04</span></div>
+          <div class="body">
+            <div class="kind">Analog &middot; Embedded</div>
+            <h3>Motion Sensor Alarm <span class="arrow">&#8599;</span></h3>
+            <p>An infrared-based motion and presence alarm that activates a buzzer through comparator thresholding. Shared responsibility for circuit assembly, threshold calibration, and testing under varying ambient-light conditions.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>IR Detection</span><span>Comparator</span><span>Threshold Calibration</span><span>Buzzer Drive</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">IR</div><div class="l">Sensing</div></div>
+                <div class="m"><div class="v">Analog&rarr;Digital</div><div class="l">Pipeline</div></div>
+                <div class="m"><div class="v">Calibrated</div><div class="l">Threshold</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal" data-lightbox="assets/img/alu_whiteboard.jpeg">
+          <div class="ph"><img src="assets/img/alu_whiteboard.jpeg" alt="Digital combination lock concept">
+            <div class="badge"><span class="stat"><span class="d"></span> VERIFIED ON FPGA</span></div><span class="num">05</span></div>
+          <div class="body">
+            <div class="kind">FPGA &middot; Verilog</div>
+            <h3>Digital Combination Lock <span class="arrow">&#8599;</span></h3>
+            <p>A 4-bit combination lock implemented on the ZYBO Z7-10, using onboard switches as the input code and LEDs to indicate lock status. Verified correct on-board behavior by testing the Verilog compare logic and documenting required waveforms.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>ZYBO Z7-10</span><span>Verilog</span><span>Compare Logic</span><span>Waveform Docs</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">4-bit</div><div class="l">Code Width</div></div>
+                <div class="m"><div class="v">On-board</div><div class="l">Validation</div></div>
+                <div class="m"><div class="v">Vivado</div><div class="l">Toolchain</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal d1" data-lightbox="assets/img/bank_whiteboard.jpeg">
+          <div class="ph"><img src="assets/img/bank_whiteboard.jpeg" alt="C++ banking program">
+            <div class="badge"><span class="stat"><span class="d"></span> VERIFIED</span></div><span class="num">06</span></div>
+          <div class="body">
+            <div class="kind">Low-Level Software &middot; C++</div>
+            <h3>Banking Authentication Program <span class="arrow">&#8599;</span></h3>
+            <p>A C++ command-line banking authentication program supporting credential verification and robust input error handling. Debugged defects using gdb breakpoints and step-through execution against automated test scripts.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>C++</span><span>gdb</span><span>Input Validation</span><span>Test Scripts</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">CLI</div><div class="l">Interface</div></div>
+                <div class="m"><div class="v">gdb</div><div class="l">Debugging</div></div>
+                <div class="m"><div class="v">Automated</div><div class="l">Tests</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ENGINEERING JOURNAL / GALLERY -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow">// ENGINEERING JOURNAL</div>
+        <h2 class="h-sec">How I think before I build</h2>
+        <p class="lead">Whiteboard work and bench builds. I break problems down on paper, trace the signal flow, then validate on real hardware. Click any frame to enlarge.</p>
+      </div>
+      <div class="gal">
+        <div class="it reveal" data-lightbox="assets/img/armv8_whiteboard.jpeg"><img src="assets/img/armv8_whiteboard.jpeg" alt="ARMv8 control flow"><div class="cap"><b>ARMv8 Control Flow</b><em>C &rarr; assembly &middot; branches &amp; loops</em></div></div>
+        <div class="it reveal d1" data-lightbox="assets/img/alu_whiteboard.jpeg"><img src="assets/img/alu_whiteboard.jpeg" alt="ALU block diagram"><div class="cap"><b>ALU Block Diagram</b><em>FA &middot; XOR &middot; AND &middot; MUX</em></div></div>
+        <div class="it reveal d2" data-lightbox="assets/img/breadboard_signal.jpeg"><img src="assets/img/breadboard_signal.jpeg" alt="Signal detection circuit"><div class="cap"><b>Signal Detection Circuit</b><em>analog input &rarr; clean digital out</em></div></div>
+        <div class="it reveal" data-lightbox="assets/img/breadboard_output.jpeg"><img src="assets/img/breadboard_output.jpeg" alt="Digital output circuit"><div class="cap"><b>Digital Output / Indicator</b><em>clean wiring &middot; verified behavior</em></div></div>
+        <div class="it reveal d1" data-lightbox="assets/img/bank_whiteboard.jpeg"><img src="assets/img/bank_whiteboard.jpeg" alt="C++ bank program logic"><div class="cap"><b>Bank Program Logic</b><em>menu &middot; loops &middot; switch</em></div></div>
+        <div class="it reveal d2" data-lightbox="assets/img/math_whiteboard.jpeg"><img src="assets/img/math_whiteboard.jpeg" alt="Step-by-step math"><div class="cap"><b>Step-by-Step Reasoning</b><em>break it down &middot; verify each step</em></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="glass cta-band reveal">
+        <div class="eyebrow" style="justify-content:center;">// EXPLORE MORE</div>
+        <h2>Want the technical depth?</h2>
+        <p>Browse the full skill matrix and resume, or ask my AI assistant to walk you through any project.</p>
+        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
+          <a class="btn btn-primary" href="skills.html">View skills &amp; resume</a>
+          <a class="btn btn-ghost" href="index.html#assistant">Ask the assistant</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a class="brand" href="index.html" style="display:inline-flex; align-items:center; gap:11px;">
+            <span class="logo"><span>AH</span></span>
+            <span class="who"><span class="n">Ali Hussein</span><span class="r">Systems Engineer</span></span>
+          </a>
+          <p>Computer Engineering @ Texas A&amp;M University. Hardware-focused, verification-minded, building toward AI &amp; advanced computing.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <a href="index.html">Home</a>
+          <a href="projects.html">Projects</a>
+          <a href="skills.html">Skills</a>
+          <a href="experience.html">Experience</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <a href="mailto:ali.hussein24@tamu.edu">ali.hussein24@tamu.edu</a>
+          <a href="https://www.linkedin.com/in/ali-hussein-b13004260/" target="_blank" rel="noopener">LinkedIn &#8599;</a>
+          <a href="https://github.com/CSCE-331-Spring-2026-900-908/project1-ali.hussein24" target="_blank" rel="noopener">GitHub &#8599;</a>
+          <a href="https://engineering.tamu.edu/" target="_blank" rel="noopener">TAMU Engineering &#8599;</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span>&copy; <span data-year>2026</span> ALI HUSSEIN &middot; BUILT AS A SYSTEMS INTERFACE</span>
+        <div class="socials">
+          <a href="mailto:ali.hussein24@tamu.edu" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+          <a href="https://www.linkedin.com/in/ali-hussein-b13004260/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.3c0-1.26-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.8V21h-4z"/></svg></a>
+          <a href="https://github.com/CSCE-331-Spring-2026-900-908/project1-ali.hussein24" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  </div>
+  <script src="assets/js/core.js"></script>
+</body>
+</html>
