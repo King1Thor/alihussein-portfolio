@@ -1,5 +1,5 @@
 /* =====================================================================
-   CORE.JS — interface runtime for the Ali Hussein engineering portfolio
+   CORE.JS, interface runtime for the Ali Hussein engineering portfolio
    Vanilla JS, zero dependencies. Resilient to CDN failures.
    ===================================================================== */
 (function () {
@@ -47,8 +47,8 @@
     document.body.style.overflow = "hidden";
   })();
 
-  /* -------------------------------------------------- CUSTOM CURSOR */
-  if (!isTouch && !reduce) {
+  /* -------------------------------------------------- CUSTOM CURSOR (disabled: use the normal mouse pointer) */
+  if (false) {
     const dot = document.createElement("div");
     const ring = document.createElement("div");
     dot.className = "cursor-dot"; ring.className = "cursor-ring";
@@ -312,4 +312,24 @@
 
   /* current year */
   $$("[data-year]").forEach(e => e.textContent = new Date().getFullYear());
+
+  /* -------------------------------------------------- LIGHT / DARK THEME */
+  (function theme() {
+    const root = document.documentElement;
+    let saved = "dark";
+    try { saved = localStorage.getItem("ah_theme") || "dark"; } catch (e) {}
+    function apply(mode) {
+      if (mode === "light") root.setAttribute("data-theme", "light");
+      else root.removeAttribute("data-theme");
+    }
+    apply(saved);
+    $$(".theme-toggle").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+        apply(next);
+        try { localStorage.setItem("ah_theme", next); } catch (e) {}
+      });
+    });
+  })();
 })();
+

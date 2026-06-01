@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Skills & Resume — Ali Hussein</title>
+  <title>Skills & Resume · Ali Hussein</title>
   <meta name="description" content="Hardware, RTL, and programming skill matrix for Ali Hussein, plus full downloadable resume. Verilog, C/C++, Python, ARMv8, FPGA, computer architecture.">
   <link rel="icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/css/main.css">
+  <script>try{if(localStorage.getItem('ah_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 </head>
 <body>
   <div id="boot">
@@ -25,23 +26,28 @@
   <nav class="nav">
     <a class="brand" href="index.html">
       <span class="logo"><span>AH</span></span>
-      <span class="who"><span class="n">Ali Hussein</span><span class="r">Systems Engineer</span></span>
+      <span class="who"><span class="n">Ali Hussein</span><span class="r">Hardware Engineer</span></span>
     </a>
     <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="projects.html">Projects</a>
       <a class="active" href="skills.html">Skills</a>
       <a href="experience.html">Experience</a>
-      <a href="index.html#assistant">AI Assistant</a>
+      <a href="designer.html">Creative</a>
+      <a href="index.html#assistant">Ask AIDEN</a>
       <a class="nav-cta" href="contact.html">Contact</a>
     </div>
+    <button class="theme-toggle" aria-label="Toggle light or dark mode" type="button">
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
+    </button>
     <button class="burger" id="burger" aria-label="Menu"><i></i><i></i><i></i></button>
   </nav>
 
   <header class="banner wrap">
     <div class="eyebrow reveal show">// CAPABILITY MATRIX</div>
     <h1 class="reveal show d1">The <span class="grad">skill stack</span> behind the systems</h1>
-    <p class="lead reveal show d2">Hardware-first, verification-minded, comfortable from the logic gate up to C/C++ and Python. Levels below reflect coursework, lab work, and real project delivery &mdash; not buzzwords.</p>
+    <p class="lead reveal show d2">Hardware-first, verification-minded, comfortable from the logic gate up to C/C++ and Python. Levels below reflect coursework, lab work, and real project delivery, not buzzwords.</p>
   </header>
 
   <section style="padding-top:30px;">
@@ -67,7 +73,7 @@
           <div class="track"><i data-fill="82"></i></div>
         </div>
         <div class="bar">
-          <div class="top"><span>FPGA Prototyping &mdash; Vivado</span><span class="lv">PROFICIENT</span></div>
+          <div class="top"><span>FPGA Prototyping (Vivado)</span><span class="lv">PROFICIENT</span></div>
           <div class="track"><i data-fill="80"></i></div>
         </div>
         <div class="bar">
@@ -108,24 +114,27 @@
     <div class="wrap">
       <div class="grid-2">
         <div class="glass skill-cat reveal">
-          <h3><span class="dot"></span> Tools &amp; Toolchains</h3>
-          <div class="kv"><span class="chip">Vivado</span><span class="chip">Multisim</span><span class="chip">LTspice</span><span class="chip">GTKWave</span><span class="chip">gdb</span><span class="chip">Git</span><span class="chip">VS Code</span><span class="chip">Linux</span></div>
+          <h3><span class="dot"></span> EDA &amp; Simulation</h3>
+          <div class="kv"><span class="chip">Vivado</span><span class="chip">Multisim</span><span class="chip">LTspice</span><span class="chip">GTKWave</span></div>
+          <h3 style="margin-top:24px;"><span class="dot"></span> Debug &amp; Dev Tools</h3>
+          <div class="kv"><span class="chip">Linux / Unix</span><span class="chip">Git</span><span class="chip">VS Code</span><span class="chip">gdb</span></div>
         </div>
         <div class="glass skill-cat reveal d1">
-          <h3><span class="dot"></span> Lab &amp; Bench Equipment</h3>
-          <div class="kv"><span class="chip">Oscilloscope MSOX3024T</span><span class="chip">Analog Discovery 2</span><span class="chip">ZYBO Z7-10 FPGA</span><span class="chip">Raspberry Pi 4</span><span class="chip">Breadboard Prototyping</span><span class="chip">Logic Analyzer</span></div>
+          <h3><span class="dot"></span> Lab &amp; Test Equipment</h3>
+          <div class="kv"><span class="chip">Oscilloscope (MSOX3024T)</span><span class="chip">Multimeter</span><span class="chip">Power Supply</span><span class="chip">Function Generator</span><span class="chip">Analog Discovery 2</span></div>
+          <h3 style="margin-top:24px;"><span class="dot"></span> Platforms</h3>
+          <div class="kv"><span class="chip">ZYBO Z7-10</span><span class="chip">Raspberry Pi 4</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- RESUME -->
   <section>
     <div class="wrap">
       <div class="sec-head reveal">
         <div class="eyebrow">// FULL DOSSIER</div>
         <h2 class="h-sec">Resume</h2>
-        <p class="lead">The complete record &mdash; education, experience, and the full project list. Read it inline or pull a copy.</p>
+        <p class="lead">The complete record: education, experience, and the full project list. Read it inline or pull a copy.</p>
       </div>
       <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:22px;" class="reveal">
         <a class="btn btn-primary" href="assets/Ali_Hussein_Resume.pdf" download>Download PDF &#8595;</a>
@@ -142,10 +151,10 @@
       <div class="glass cta-band reveal">
         <div class="eyebrow" style="justify-content:center;">// NEXT</div>
         <h2>See the work in context</h2>
-        <p>Skills are easier to trust when you can see them shipped. Browse the projects or ask my AI assistant anything.</p>
+        <p>Skills are easier to trust when you can see them shipped. Browse the projects or ask AIDEN anything.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
           <a class="btn btn-primary" href="projects.html">View projects</a>
-          <a class="btn btn-ghost" href="index.html#assistant">Ask the assistant</a>
+          <a class="btn btn-ghost" href="index.html#assistant">Ask AIDEN</a>
         </div>
       </div>
     </div>
@@ -156,9 +165,9 @@
         <div class="foot-brand">
           <a class="brand" href="index.html" style="display:inline-flex; align-items:center; gap:11px;">
             <span class="logo"><span>AH</span></span>
-            <span class="who"><span class="n">Ali Hussein</span><span class="r">Systems Engineer</span></span>
+            <span class="who"><span class="n">Ali Hussein</span><span class="r">Hardware Engineer</span></span>
           </a>
-          <p>Computer Engineering @ Texas A&amp;M University. Hardware-focused, verification-minded, building toward AI &amp; advanced computing.</p>
+          <p>Computer Engineering @ Texas A&amp;M University. Hardware-focused and verification-minded, working in digital design, RTL, and FPGA prototyping.</p>
         </div>
         <div>
           <h4>Navigate</h4>
@@ -166,6 +175,7 @@
           <a href="projects.html">Projects</a>
           <a href="skills.html">Skills</a>
           <a href="experience.html">Experience</a>
+          <a href="designer.html">Creative</a>
           <a href="contact.html">Contact</a>
         </div>
         <div>

@@ -1,5 +1,5 @@
 /* =====================================================================
-   ASSISTANT.JS — "AIDEN" : Ali's on-site engineering assistant.
+   ASSISTANT.JS, "AIDEN" : Ali's on-site engineering assistant.
    Runs fully client-side (no backend / no key required).
    Intent-matched knowledge base built from Ali's real resume + projects.
 
@@ -8,6 +8,18 @@
    ===================================================================== */
 (function () {
   "use strict";
+
+  /* =====================================================================
+     >>> WIRE A REAL AI HERE <<<
+     Leave AI_ENDPOINT = "" to use the built-in offline knowledge base.
+     To use a real AI model, stand up your own backend (it keeps your API
+     key SECRET, server-side) that accepts { message, history } and returns
+     { reply }. Then put its URL below, e.g.:
+        const AI_ENDPOINT = "https://your-backend.com/api/assistant";
+     That's the only line you need to change. See callLiveModel() below.
+     ===================================================================== */
+  const AI_ENDPOINT = "";
+
   const log = document.getElementById("chatLog");
   const form = document.getElementById("chatForm");
   const input = document.getElementById("chatInput");
@@ -19,12 +31,12 @@
     {
       id: "who",
       keys: ["who", "about", "yourself", "ali", "tell me", "introduce", "background", "summary"],
-      a: "Ali Hussein is a <b>Computer Engineering</b> student at <b>Texas A&amp;M University</b> (B.S., May 2027) with a <b>Mathematics</b> minor. He's a hardware-focused engineer who loves digital systems, computer architecture, RTL/Verilog design, and verification. Think: someone who builds intelligent systems from the gate level up."
+      a: "Ali Hussein is a <b>Computer Engineering</b> student at <b>Texas A&amp;M University</b> (B.S., May 2027) with a <b>Mathematics</b> minor. He's a hardware-focused engineer who loves digital systems, computer architecture, RTL/Verilog design, and verification. Think: someone who builds and verifies digital hardware from the logic gate up."
     },
     {
       id: "goal",
       keys: ["intern", "internship", "looking for", "hire", "summer", "available", "job", "seeking", "role"],
-      a: "Ali is seeking a <b>Summer 2026 Hardware Engineering internship</b> focused on digital systems, RTL design, and verification. He's eligible to intern in the U.S. The fastest way to reach him is the <b>Contact</b> page — or email <b>ali.hussein24@tamu.edu</b>."
+      a: "Ali is seeking a <b>Summer 2026 Hardware Engineering internship</b> focused on digital systems, RTL design, and verification. He's eligible to intern in the U.S. The fastest way to reach him is the <b>Contact</b> page, or email <b>ali.hussein24@tamu.edu</b>."
     },
     {
       id: "skills",
@@ -34,22 +46,22 @@
     {
       id: "projects",
       keys: ["project", "built", "work", "portfolio", "made", "build", "show me"],
-      a: "Highlighted projects: <b>LRU Cache Simulator</b> (configurable set-associative, O(1) replacement), <b>Single-Cycle ARMv8 CPU</b> (full datapath, team), <b>Motion Sensor Alarm</b> (IR + comparator), <b>Digital Combination Lock</b> on the ZYBO Z7-10, and a <b>C++ Banking Authentication</b> program. Open the <b>Projects</b> page for the full command center."
+      a: "On the web side: <b>Reveille Bubble Tea</b>, a full-stack point-of-sale platform (customer kiosk, cashier terminal, manager dashboard) built with a team and deployed live. On the hardware side: <b>LRU Cache Simulator</b> (O(1) replacement), <b>Single-Cycle ARMv8 CPU</b> (full datapath, team), <b>Motion Sensor Alarm</b> (IR + comparator), <b>Digital Combination Lock</b> on the ZYBO Z7-10, and a <b>C++ Banking Authentication</b> program. Open the <b>Projects</b> page for the full command center."
     },
     {
       id: "cache",
       keys: ["cache", "lru", "memory simulator", "set associative"],
-      a: "The <b>LRU Cache Simulator</b> is a configurable set-associative cache that reports hit/miss statistics from memory traces. Ali designed an <b>O(1)</b> LRU replacement policy using a hash map + doubly linked list, then used it to study miss-rate tradeoffs across cache configurations — exactly the kind of architecture analysis you'd do tuning a real memory hierarchy."
+      a: "The <b>LRU Cache Simulator</b> is a configurable set-associative cache that reports hit/miss statistics from memory traces. Ali designed an <b>O(1)</b> LRU replacement policy using a hash map + doubly linked list, then used it to study miss-rate tradeoffs across cache configurations, exactly the kind of architecture analysis you'd do tuning a real memory hierarchy."
     },
     {
       id: "cpu",
       keys: ["cpu", "armv8", "arm", "processor", "datapath", "single cycle", "single-cycle"],
-      a: "The <b>Single-Cycle ARMv8 CPU</b> (team project) implements a full datapath — fetch, decode, register file, ALU, memory, and write-back. Ali helped build the control-unit logic for R-type, load/store, and branch instructions, validating behavior through directed instruction testing and datapath/control tracing."
+      a: "The <b>Single-Cycle ARMv8 CPU</b> (team project) implements a full datapath, fetch, decode, register file, ALU, memory, and write-back. Ali helped build the control-unit logic for R-type, load/store, and branch instructions, validating behavior through directed instruction testing and datapath/control tracing."
     },
     {
-      id: "alu",
-      keys: ["alu", "adder", "arithmetic", "logic unit", "mux"],
-      a: "Ali built a working <b>4-bit ALU</b> from modular combinational blocks — multiplexers for operation select and full adders for arithmetic — with four LEDs displaying the result bits for instant visual verification. It's the same 'build complexity from small reusable parts' thinking used in real CPU datapaths."
+      id: "bubbletea",
+      keys: ["bubble", "boba", "reveille", "web", "website", "full stack", "fullstack", "pos", "restaurant", "app", "frontend", "backend", "api", "team 25", "team25"],
+      a: "<b>Reveille Bubble Tea</b> is a full-stack point-of-sale platform Ali built with a team. It has three role-based interfaces on one shared API and database: a <b>customer kiosk</b> (ordering, rewards points, spin-the-wheel, drink customization), a <b>cashier terminal</b> (TAMU login + staff PIN), and a <b>manager dashboard</b> (analytics, inventory, menu editing, employee management, reports). It's deployed live, you can open it from the <b>Projects</b> page."
     },
     {
       id: "lock",
@@ -59,22 +71,22 @@
     {
       id: "alarm",
       keys: ["alarm", "motion", "sensor", "ir", "infrared", "comparator", "buzzer"],
-      a: "The <b>Motion Sensor Alarm</b> (team project) is an infrared presence detector that triggers a buzzer via comparator thresholding. Ali shared circuit assembly, threshold calibration, and testing across varying ambient-light conditions — a clean analog-to-digital decision pipeline."
+      a: "The <b>Motion Sensor Alarm</b> (team project) is an infrared presence detector that triggers a buzzer via comparator thresholding. Ali shared circuit assembly, threshold calibration, and testing across varying ambient-light conditions, a clean analog-to-digital decision pipeline."
     },
     {
       id: "bank",
       keys: ["bank", "banking", "c++", "authentication", "cpp"],
-      a: "The <b>Banking Authentication Program</b> is a C++ command-line app with credential verification and robust input error handling. Ali debugged it using <b>gdb</b> breakpoints and step-through execution against automated test scripts — solid low-level debugging discipline."
+      a: "The <b>Banking Authentication Program</b> is a C++ command-line app with credential verification and robust input error handling. Ali debugged it using <b>gdb</b> breakpoints and step-through execution against automated test scripts, solid low-level debugging discipline."
     },
     {
       id: "experience",
       keys: ["experience", "tutor", "coach", "mcdonald", "leader", "job history", "employ", "teaching"],
-      a: "Experience: <b>Academic Coach / Tutor</b> at Blinn College (since Nov 2023) — tutored 50+ students in physics & math across 100+ sessions. Before that, <b>Team Leader at McDonald's</b> — ran shifts for 300+ customers and trained 20+ employees. Both sharpened the communication and leadership that good engineers need. Full detail on the <b>Experience</b> page."
+      a: "Experience: <b>Academic Coach / Tutor</b> at Blinn College (since Nov 2023), tutored 50+ students in physics & math across 100+ sessions. Before that, <b>Team Leader at McDonald's</b>, ran shifts for 300+ customers and trained 20+ employees. Both sharpened the communication and leadership that good engineers need. Full detail on the <b>Experience</b> page."
     },
     {
       id: "education",
       keys: ["education", "school", "university", "gpa", "degree", "blinn", "study", "college", "major"],
-      a: "Education: <b>Texas A&amp;M University</b> — B.S. Computer Engineering, minor in Mathematics, graduating <b>May 2027</b> (GPA 3.45). Prior: <b>Blinn College</b> engineering coursework (GPA 3.92, Chancellor's & Dean's List, 52 credit hours)."
+      a: "Education: <b>Texas A&amp;M University</b>, B.S. Computer Engineering, minor in Mathematics, graduating <b>May 2027</b> (GPA 3.1). Prior: <b>Blinn College</b> engineering coursework (GPA 3.92, Chancellor's &amp; Dean's List, 52 credit hours)."
     },
     {
       id: "verification",
@@ -84,7 +96,7 @@
     {
       id: "activities",
       keys: ["ieee", "club", "organization", "activit", "scla", "society"],
-      a: "Ali is active in <b>IEEE (Texas A&amp;M Student Branch)</b> — technical workshops, industry talks, and hands-on build sessions — and the <b>Society for Collegiate Leadership &amp; Achievement (SCLA)</b>, completing career-readiness and portfolio modules."
+      a: "Ali is active in <b>IEEE (Texas A&amp;M Student Branch)</b>, technical workshops, industry talks, and hands-on build sessions, and the <b>Society for Collegiate Leadership &amp; Achievement (SCLA)</b>, completing career-readiness and portfolio modules."
     },
     {
       id: "contact",
@@ -99,7 +111,7 @@
     {
       id: "why",
       keys: ["why", "stand out", "different", "special", "best", "recruiter", "impress"],
-      a: "What makes Ali stand out: he doesn't just write code or wire a board — he reasons about systems end-to-end, validates on real hardware, and communicates clearly (years of tutoring will do that). He bridges low-level hardware and modern software with a verification-first mindset."
+      a: "What makes Ali stand out: he doesn't just write code or wire a board, he reasons about systems end-to-end, validates on real hardware, and communicates clearly (years of tutoring will do that). He bridges low-level hardware and modern software with a verification-first mindset."
     },
   ];
 
@@ -109,7 +121,7 @@
   function findAnswer(qRaw) {
     const q = qRaw.toLowerCase().trim();
     if (GREET.some(g => q === g || q.startsWith(g + " ")))
-      return "Hey — I'm <b>AIDEN</b>, Ali's engineering assistant. Ask me about his projects, skills, experience, or how to reach him. Try one of the chips below.";
+      return "Hey, I'm <b>AIDEN</b>. What would you like to know, his projects, his skills, his experience, or how to reach him?";
     if (THANKS.some(t => q.includes(t)) && q.length < 22)
       return "Anytime. Want me to walk you through his projects or pull up how to contact him?";
     // score each entry
@@ -120,19 +132,23 @@
       if (score > bestScore) { bestScore = score; best = item; }
     }
     if (best && bestScore > 0) return best.a;
-    return "Good question — I'm focused on Ali's engineering background, so I can answer about his <b>projects</b>, <b>skills &amp; tools</b>, <b>experience</b>, <b>education</b>, or <b>how to contact him</b>. Which one would help?";
+    return "Good question, I'm focused on Ali's engineering background, so I can answer about his <b>projects</b>, <b>skills &amp; tools</b>, <b>experience</b>, <b>education</b>, or <b>how to contact him</b>. Which one would help?";
   }
 
-  /* ---- OPTIONAL: live model hook (left as a stub) ----
-     async function callLiveModel(message, history){
-       const res = await fetch("/api/assistant", {            // <- your backend
-         method:"POST", headers:{ "Content-Type":"application/json" },
-         body: JSON.stringify({ message, history })
-       });
-       const data = await res.json();
-       return data.reply;
-     }
-  */
+  /* ---- LIVE model hook ----
+     Active automatically when AI_ENDPOINT (top of file) is set. Your backend
+     receives { message, history } and must return JSON like { "reply": "..." }.
+     Keep all API keys on the server. Never put a real key in this file. */
+  async function callLiveModel(message, hist) {
+    const res = await fetch(AI_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, history: hist })
+    });
+    if (!res.ok) throw new Error("AI endpoint error " + res.status);
+    const data = await res.json();
+    return data.reply;
+  }
 
   const history = [];
   function add(role, html) {
@@ -154,6 +170,20 @@
   function respond(text) {
     history.push({ role: "user", content: text });
     const t = typing();
+    if (AI_ENDPOINT) {
+      callLiveModel(text, history).then(reply => {
+        t.remove();
+        const answer = reply || "Sorry, I didn't catch that. Try asking about Ali's projects, skills, or experience.";
+        add("ai", answer);
+        history.push({ role: "assistant", content: answer });
+      }).catch(() => {
+        t.remove();
+        const answer = findAnswer(text);
+        add("ai", answer);
+        history.push({ role: "assistant", content: answer });
+      });
+      return;
+    }
     const answer = findAnswer(text);
     const delay = 480 + Math.min(answer.length * 7, 900);
     setTimeout(() => {
