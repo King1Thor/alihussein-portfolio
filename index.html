@@ -48,7 +48,6 @@
       <a href="skills.html">Skills</a>
       <a href="experience.html">Experience</a>
       <a href="designer.html">Creative</a>
-      <a href="index.html#assistant">Ask AIDEN</a>
       <a class="nav-cta" href="contact.html">Contact</a>
     </div>
     <button class="theme-toggle" aria-label="Toggle light or dark mode" type="button">
@@ -70,18 +69,15 @@
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy reveal show">
-          <div class="hero-status">
-            <span class="pulse"></span> SYSTEM ONLINE · AVAILABLE FOR SUMMER 2026
-          </div>
           <h1>Building reliable <span class="grad">digital hardware</span><br>from the logic gate up.</h1>
-          <div class="type mono" data-type='["&gt; digital systems engineer","&gt; RTL / Verilog &amp; FPGA design","&gt; computer architecture + verification","&gt; embedded &amp; low-level systems","&gt; hardware bring-up &amp; debug"]'>&gt; digital systems engineer<span class="caret">▋</span></div>
-          <p class="lead">I'm <b>Ali Hussein</b>, a Computer Engineering student at <b>Texas A&amp;M University</b>. I design and verify digital systems, from ARMv8 datapaths and cache simulators to FPGA logic, with a measure-and-verify mindset and a love for how complexity is built from clean building blocks.</p>
+          <div class="type mono" data-type='["&gt; digital systems engineer","&gt; RTL / Verilog &amp; FPGA design","&gt; computer architecture + verification","&gt; ASIC &amp; FPGA digital design","&gt; hardware bring-up &amp; debug"]'>&gt; digital systems engineer<span class="caret">▋</span></div>
+          <p class="lead">I'm <b>Ali Hussein</b>, a Computer Engineering student at <b>Texas A&amp;M University</b>. I design and verify digital systems, from ARMv8 datapaths and cache simulators to ASIC and FPGA logic, with a measure-and-verify mindset and a love for how complexity is built from clean building blocks.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="projects.html">
               Explore Projects
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
-            <a class="btn btn-ghost" href="index.html#assistant">Talk to AIDEN</a>
+            <button type="button" class="btn btn-ghost" data-aiden-open>Ask AIDEN</button>
           </div>
           <div class="hero-stats">
             <div class="s"><div class="num"><span data-count="6">0</span></div><div class="lbl">Projects Shipped</div></div>
@@ -101,6 +97,7 @@
             <span class="hud bl">DATAPATH<br><b>5-STAGE</b></span>
             <span class="hud br">VERIFIED<br><b>ON FPGA</b></span>
             <span class="cpu-tag">AH-V8 PROCESSOR · <b>DIGITAL DESIGN UNIT</b></span>
+            <span class="cpu-state" id="cpuState">SEALED · CLICK TO OPEN</span>
           </div>
         </div>
       </div>
@@ -129,7 +126,7 @@
       <div class="about">
         <div class="photo reveal">
           <img src="assets/img/profile.jpeg" alt="Portrait of Ali Hussein">
-          <div class="tag">CURRENTLY · COLLEGE STATION, TX<b>Ali Hussein</b></div>
+          <div class="tag">BASED IN · TEXAS, USA<b>Ali Hussein</b></div>
         </div>
         <div class="reveal d1">
           <div class="eyebrow">// PROFILE</div>
@@ -137,13 +134,14 @@
           <p>I'm drawn to the layer where software meets silicon: datapaths, control logic, memory hierarchies, and the timing that makes them real. I like breaking systems into understandable parts, building them from clean reusable blocks, and proving they work with measurement instead of guesswork.</p>
           <p>My focus areas are <b>digital systems</b>, <b>computer architecture</b>, <b>RTL/Verilog design</b>, and <b>verification</b>. Years of tutoring also taught me to explain complex ideas clearly, which is half the job on any engineering team.</p>
           <div class="chips">
-            <span class="chip">Digital Logic</span>
-            <span class="chip">Computer Architecture</span>
-            <span class="chip">FPGA / Vivado</span>
-            <span class="chip">Verification</span>
-            <span class="chip">Embedded Systems</span>
-            <span class="chip">Low-Level Programming</span>
+            <span class="chip" data-def="Designing circuits from logic gates: combinational logic (adders, MUXes) and sequential logic (flip-flops, finite state machines) that form the building blocks of every digital system.">Digital Logic</span>
+            <span class="chip" data-def="How a processor is organized: the datapath and control unit, pipelines, registers, and the memory hierarchy (caches) that determine how fast and efficiently instructions run.">Computer Architecture</span>
+            <span class="chip" data-def="Application-Specific Integrated Circuit: a custom chip designed for one purpose. The RTL-to-silicon flow (Verilog, synthesis, verification) that turns a hardware description into a real chip.">ASIC</span>
+            <span class="chip" data-def="Field-Programmable Gate Array: reconfigurable hardware you program with Verilog. Vivado is the toolchain used to synthesize, implement, and load a design onto boards like the ZYBO Z7-10.">FPGA / Vivado</span>
+            <span class="chip" data-def="Proving a design is correct: directed testbenches, waveform inspection (GTKWave), and on-board validation, the 'measure, don't guess' discipline that keeps hardware reliable.">Verification</span>
+            <span class="chip" data-def="Programming close to the metal: C/C++ and ARMv8 assembly, working with microcontrollers, sensors, and boards like the Raspberry Pi where software meets real hardware.">Embedded &amp; Low-Level</span>
           </div>
+          <div class="chip-def" id="chipDef"></div>
         </div>
       </div>
     </div>
@@ -155,23 +153,50 @@
       <div class="sec-head reveal">
         <div class="eyebrow">// CAPABILITIES</div>
         <h2 class="h-sec">What I actually do</h2>
-        <p class="lead">Real engineering work, not buzzwords. Each area below maps to projects you can open and inspect.</p>
+        <p class="lead">Real engineering work, not buzzwords. Tap an area to see what it actually means and where it shows up in my projects.</p>
       </div>
-      <div class="grid-3">
-        <div class="glass fcard reveal">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9zM4 9h2M4 14h2M18 9h2M18 14h2M9 4v2M14 4v2M9 18v2M14 18v2"/></svg></div>
-          <h3>Digital Logic &amp; Architecture</h3>
-          <p>Combinational and sequential design with MUXes, full adders, ALUs, and FSMs, plus full ARMv8 datapaths covering fetch, decode, execute, memory, and write-back.</p>
+
+      <div class="cap-explorer reveal">
+        <div class="cap-tabs">
+          <button class="cap-tab" data-cap="logic"><span class="tnum">01</span> Digital Logic &amp; Architecture</button>
+          <button class="cap-tab" data-cap="asic"><span class="tnum">02</span> ASIC &amp; RTL Design</button>
+          <button class="cap-tab" data-cap="verify"><span class="tnum">03</span> Verification &amp; Debug</button>
+          <button class="cap-tab" data-cap="embedded"><span class="tnum">04</span> Embedded &amp; Low-Level</button>
         </div>
-        <div class="glass fcard reveal d1">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l2 6 4-12 2 6h6"/></svg></div>
-          <h3>Verification &amp; Debug</h3>
-          <p>Directed testing, waveform inspection in GTKWave, on-board FPGA validation, and gdb step-through debugging. Measure and verify, never guess.</p>
-        </div>
-        <div class="glass fcard reveal d2">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M12 16h.01M16 16h.01"/></svg></div>
-          <h3>Embedded &amp; Low-Level</h3>
-          <p>C/C++ and ARMv8 assembly, circuit builds on real hardware, ZYBO Z7-10 and Raspberry Pi, comparator and sensor interfacing.</p>
+        <div class="cap-stage">
+
+          <div class="cap-panel" data-cap="logic">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h6v6H9zM4 9h2M4 14h2M18 9h2M18 14h2M9 4v2M14 4v2M9 18v2M14 18v2"/></svg></div>
+            <div class="what">What it means</div>
+            <h3>Digital Logic &amp; Architecture</h3>
+            <p>Building a computer from the ground up: logic gates, MUXes, full adders, and finite state machines composed into a full ARMv8 datapath covering fetch, decode, execute, memory, and write-back. It's the difference between <i>using</i> a chip and understanding exactly how one works.</p>
+            <div class="mini"><span>Combinational</span><span>Sequential / FSM</span><span>ARMv8 Datapath</span><span>Control Unit</span></div>
+          </div>
+
+          <div class="cap-panel" data-cap="asic">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></svg></div>
+            <div class="what">What it means</div>
+            <h3>ASIC &amp; RTL Design</h3>
+            <p>An <b>ASIC</b> (Application-Specific Integrated Circuit) is a custom chip built for one job. I work the RTL side of that flow: describing hardware in <b>Verilog</b>, then synthesizing and verifying it so a design could be taped out to silicon or programmed onto an FPGA.</p>
+            <div class="mini"><span>Verilog RTL</span><span>Synthesis</span><span>Timing &amp; Constraints</span><span>RTL to Silicon</span></div>
+          </div>
+
+          <div class="cap-panel" data-cap="verify">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l2 6 4-12 2 6h6"/></svg></div>
+            <div class="what">What it means</div>
+            <h3>Verification &amp; Debug</h3>
+            <p>Proving the hardware is correct before trusting it: directed testbenches, waveform inspection in <b>GTKWave</b>, on-board FPGA validation, and <b>gdb</b> step-through debugging for C/C++. The rule across every project, measure and verify, never guess.</p>
+            <div class="mini"><span>Testbenches</span><span>GTKWave</span><span>FPGA Validation</span><span>gdb</span></div>
+          </div>
+
+          <div class="cap-panel" data-cap="embedded">
+            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M12 16h.01M16 16h.01"/></svg></div>
+            <div class="what">What it means</div>
+            <h3>Embedded &amp; Low-Level</h3>
+            <p>Programming where software meets silicon: <b>C/C++</b> and <b>ARMv8 assembly</b>, sensor and comparator interfacing, and circuit builds on real boards like the <b>ZYBO Z7-10</b> and <b>Raspberry Pi 4</b>.</p>
+            <div class="mini"><span>C / C++</span><span>ARMv8 ASM</span><span>ZYBO Z7-10</span><span>Raspberry Pi 4</span></div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -183,11 +208,17 @@
       <div class="sec-head reveal">
         <div class="eyebrow">// SELECTED WORK</div>
         <h2 class="h-sec">Featured builds</h2>
-        <p class="lead">A cross-section of what I build, from a live full-stack web app to verified silicon. Hover to expand, or open the full command center.</p>
+        <p class="lead">A cross-section of what I build, from a live full-stack web app to verified silicon. Click any card to open it, or open the full command center.</p>
       </div>
       <div class="proj-grid">
 
-        <article class="glass proj reveal">
+        <article class="glass proj reveal" data-proj
+          data-kind="Full-Stack · Team Project"
+          data-title="Reveille Bubble Tea"
+          data-desc="A full-stack point-of-sale platform built with a team. Three role-based interfaces run on one shared API and database: a customer ordering kiosk (rewards, spin-the-wheel, drink customization), a cashier terminal gated by TAMU login and a staff PIN, and a manager dashboard for analytics, inventory, menu editing, employee management, and reports. Deployed live on Render."
+          data-tags="Frontend|REST API|Database|Auth & Roles|Deployed on Render"
+          data-url="https://project3-team25-m13k.onrender.com/"
+          data-visit="Visit the live restaurant site">
           <div class="ph" style="background:radial-gradient(120% 90% at 80% -10%, rgba(181,29,53,.32), transparent 55%), linear-gradient(160deg,#15171f,#0c0e15); display:grid; place-items:center;">
             <span style="font-family:var(--font-display); font-weight:800; font-size:2.6rem; color:#fff; letter-spacing:.06em; text-shadow:0 10px 30px rgba(181,29,53,.5);">RB</span>
             <div class="badge"><span class="stat"><span class="d"></span> LIVE SITE</span></div>
@@ -199,12 +230,16 @@
             <p>A full point-of-sale platform: a customer kiosk, a cashier terminal, and a manager dashboard on one shared API and database. Deployed live on Render.</p>
             <div class="reveal-more">
               <div class="tags"><span>Frontend</span><span>REST API</span><span>Database</span><span>Auth &amp; Roles</span></div>
-              <a class="btn btn-ghost" href="projects.html" style="margin-top:14px;">Explore this project →</a>
+              <span class="btn btn-ghost" style="margin-top:14px;">Click to explore →</span>
             </div>
           </div>
         </article>
 
-        <article class="glass proj reveal d1">
+        <article class="glass proj reveal d1" data-proj
+          data-kind="Computer Architecture · Team Project"
+          data-title="Single-Cycle ARMv8 CPU"
+          data-desc="A complete single-cycle ARMv8 datapath covering fetch, decode, register file, ALU, memory, and write-back, with control-unit logic for R-type, load/store, and branch instructions. Validated through directed instruction testing and datapath/control tracing."
+          data-tags="ARMv8 ISA|Datapath|Control Unit|Verilog">
           <div class="ph">
             <img src="assets/img/armv8_whiteboard.jpeg" alt="ARMv8 datapath design">
             <div class="badge"><span class="stat r"><span class="d"></span> TEAM PROJECT</span></div>
@@ -220,7 +255,11 @@
           </div>
         </article>
 
-        <article class="glass proj reveal">
+        <article class="glass proj reveal" data-proj
+          data-kind="Memory Systems · C++"
+          data-title="LRU Cache Simulator"
+          data-desc="A configurable set-associative cache simulator that reports hit and miss statistics from memory traces. Implements an O(1) LRU replacement policy backed by a hash map and a doubly linked list, used to study miss-rate tradeoffs across cache configurations."
+          data-tags="C++|Set-Associative|Hash Map + DLL|O(1) LRU">
           <div class="ph">
             <img src="assets/img/breadboard_signal.jpeg" alt="Signal detection circuit">
             <div class="badge"><span class="stat"><span class="d"></span> VERIFIED</span></div>
@@ -236,7 +275,11 @@
           </div>
         </article>
 
-        <article class="glass proj reveal d1">
+        <article class="glass proj reveal d1" data-proj
+          data-kind="Analog · Embedded · Team Project"
+          data-title="Motion Sensor Alarm"
+          data-desc="An infrared-based motion and presence alarm that activates a buzzer through comparator thresholding. Built with a teammate, with shared responsibility for circuit assembly, threshold calibration, and testing under varying ambient-light conditions."
+          data-tags="IR Detection|Comparator|Calibration|Buzzer Drive">
           <div class="ph">
             <img src="assets/img/breadboard_output.jpeg" alt="Motion sensor circuit">
             <div class="badge"><span class="stat r"><span class="d"></span> TEAM PROJECT</span></div>
@@ -259,64 +302,34 @@
     </div>
   </section>
 
-  <!-- AI ASSISTANT -->
-  <section id="assistant">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <div class="eyebrow">// ASK AIDEN</div>
-        <h2 class="h-sec">Meet AIDEN</h2>
-        <p class="lead">A chat bot that knows Ali's work. Ask about his projects, skills, or experience, and it points recruiters and engineers to the right place.</p>
-      </div>
-
-      <div class="assistant">
-        <div class="glass neural reveal">
-          <canvas id="neural-canvas"></canvas>
-          <div class="ncontent">
-            <h3>Ask me anything.</h3>
-            <p>AIDEN answers questions about Ali's work right here in your browser. It's built to plug into a real AI model whenever Ali connects one.</p>
-            <div class="feats">
-              <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Knows every project</div>
-              <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Guides recruiters to the right page</div>
-              <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg> Ready to connect to a real AI model</div>
-            </div>
-          </div>
+  <!-- PROJECT POPUP (shared) -->
+  <div id="projModal" role="dialog" aria-modal="true">
+    <div class="pm-card">
+      <div class="pm-hero">
+        <div class="pm-x" aria-label="Close">&#10005;</div>
+        <div class="pm-mark" id="pmMark">RB</div>
+        <div>
+          <div class="pm-kind" id="pmKind">PROJECT</div>
+          <h2 id="pmTitle">Project</h2>
         </div>
-
-        <div class="glass chat reveal d1">
-          <div class="hd">
-            <div class="av"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
-            <div class="t">
-              <div class="n">AIDEN</div>
-              <div class="s"><span class="d"></span> ONLINE · ASSISTANT v1.0</div>
-            </div>
-          </div>
-          <div class="log" id="chatLog">
-            <div class="msg ai">Hey, I'm <b>AIDEN</b>. What would you like to know about Ali, his projects, his skills, or how to reach him? Tap a question below or type your own.</div>
-          </div>
-          <div class="quick" id="chatQuick">
-            <button data-q="What projects has Ali built?">His projects</button>
-            <button data-q="What are Ali's main skills?">Skills</button>
-            <button data-q="Is Ali looking for an internship?">Internship</button>
-            <button data-q="How do I contact Ali?">Contact</button>
-          </div>
-          <form class="input" id="chatForm" autocomplete="off">
-            <input id="chatInput" type="text" placeholder="Ask about Ali's work…" aria-label="Message">
-            <button type="submit" aria-label="Send">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-            </button>
-          </form>
+      </div>
+      <div class="pm-body">
+        <p id="pmDesc"></p>
+        <div class="pm-tags" id="pmTags"></div>
+        <div class="pm-actions">
+          <a class="btn btn-primary" id="pmVisit" href="#" target="_blank" rel="noopener">Visit the live site ↗</a>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- CTA -->
   <section style="padding-top:0;">
     <div class="wrap">
       <div class="glass cta-band reveal">
         <div class="eyebrow" style="justify-content:center;">// LET'S CONNECT</div>
-        <h2>Let's build something at the hardware level.</h2>
-        <p>Whether it's an internship, a project, or just talking shop about RTL and verification, my inbox is open.</p>
+        <h2>Let's talk hardware.</h2>
+        <p>Got a project, a question, or just want to talk shop about RTL, ASIC, and verification? Drop me a line.</p>
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
           <a class="btn btn-primary" href="contact.html">Get in touch</a>
           <a class="btn btn-ghost" href="assets/Ali_Hussein_Resume.pdf" target="_blank" rel="noopener">Download resume</a>

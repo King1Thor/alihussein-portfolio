@@ -98,8 +98,12 @@
       mouse.x = e.clientX * devicePixelRatio; mouse.y = e.clientY * devicePixelRatio;
     });
     const LINK = 130 * devicePixelRatio, PULL = 150 * devicePixelRatio;
+    function isLight() { return document.documentElement.getAttribute("data-theme") === "light"; }
     function frame() {
       ctx.clearRect(0, 0, w, h);
+      const light = isLight();
+      const dotCol = light ? "rgba(90,40,55,.55)" : "rgba(127,227,255,.55)";
+      const lineRGB = light ? "70,90,140" : "120,150,210";
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > w) p.vx *= -1;
@@ -108,7 +112,7 @@
         if (d < PULL) { p.x += dx / d * .6; p.y += dy / d * .6; }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, 7);
-        ctx.fillStyle = "rgba(127,227,255,.55)";
+        ctx.fillStyle = dotCol;
         ctx.fill();
       }
       for (let i = 0; i < pts.length; i++) {
@@ -116,8 +120,8 @@
           const a = pts[i], b = pts[j];
           const dist = Math.hypot(a.x - b.x, a.y - b.y);
           if (dist < LINK) {
-            const o = (1 - dist / LINK) * .35;
-            ctx.strokeStyle = `rgba(120,150,210,${o})`;
+            const o = (1 - dist / LINK) * (light ? .45 : .35);
+            ctx.strokeStyle = `rgba(${lineRGB},${o})`;
             ctx.lineWidth = devicePixelRatio * .6;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
@@ -331,5 +335,75 @@
       });
     });
   })();
+
+  /* -------------------------------------------------- CAPABILITY EXPLORER (tabs) */
+  (function capabilities() {
+    const tabs = $$(".cap-tab");
+    if (!tabs.length) return;
+    const panels = $$(".cap-panel");
+    function show(id) {
+      tabs.forEach(t => t.classList.toggle("active", t.dataset.cap === id));
+      panels.forEach(p => {
+        const on = p.dataset.cap === id;
+        p.classList.toggle("active", on);
+      });
+    }
+    tabs.forEach(t => t.addEventListener("click", () => show(t.dataset.cap)));
+    if (tabs[0]) show(tabs[0].dataset.cap);
+  })();
+
+  /* -------------------------------------------------- TERM CHIPS (click to define) */
+  (function termChips() {
+    const out = $("#chipDef");
+    const chips = $$(".chip[data-def]");
+    if (!out || !chips.length) return;
+    chips.forEach(c => c.addEventListener("click", () => {
+      const active = c.classList.contains("on");
+      chips.forEach(x => x.classList.remove("on"));
+      if (active) { out.classList.remove("show"); return; }
+      c.classList.add("on");
+      out.innerHTML = "<b>" + c.textContent.trim() + "</b>: " + c.dataset.def;
+      out.classList.add("show");
+    }));
+  })();
+
+  /* -------------------------------------------------- PROJECT POPUP (works on any page) */
+  (function projModal() {
+    const modal = $("#projModal");
+    if (!modal) return;
+    const elKind = $("#pmKind", modal), elTitle = $("#pmTitle", modal),
+          elDesc = $("#pmDesc", modal), elTags = $("#pmTags", modal),
+          elVisit = $("#pmVisit", modal), elMark = $("#pmMark", modal);
+    function open(card) {
+      const d = card.dataset;
+      const q = s => card.querySelector(s);
+      const kind = d.kind || (q(".kind") ? q(".kind").textContent.trim() : "PROJECT");
+      const title = d.title || (q("h3") ? q("h3").textContent.replace(/[↗↘\s]+$/, "").trim() : "Project");
+      const desc = d.desc || (q(".body p") ? q(".body p").textContent.trim() : "");
+      let tags = [];
+      if (d.tags) tags = d.tags.split("|");
+      else tags = $$(".tags span", card).map(s => s.textContent);
+      elKind.textContent = kind;
+      elTitle.textContent = title;
+      elDesc.textContent = desc;
+      elMark.textContent = title.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+      elTags.innerHTML = tags.filter(Boolean).map(t => "<span>" + t.trim() + "</span>").join("");
+      if (d.url) { elVisit.href = d.url; elVisit.style.display = ""; elVisit.textContent = (d.visit || "Visit the live site") + "  ↗"; }
+      else { elVisit.style.display = "none"; }
+      modal.classList.add("open"); document.body.style.overflow = "hidden";
+    }
+    function close() { modal.classList.remove("open"); document.body.style.overflow = ""; }
+    $$("[data-proj]").forEach(c => {
+      c.style.cursor = "pointer";
+      c.addEventListener("click", e => {
+        if (e.target.closest("a")) return; // let real links work
+        open(c);
+      });
+    });
+    $$(".pm-x", modal).forEach(b => b.addEventListener("click", close));
+    modal.addEventListener("click", e => { if (e.target === modal) close(); });
+    addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  })();
 })();
+
 
