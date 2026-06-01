@@ -1,0 +1,452 @@
+/* ==============================
+   STYLE 2 — ZEN / EDITORIAL (REAL layout change)
+   Works with your current HTML:
+   .nav .nav-inner .brand .nav-links
+   .hero .inner .hero-grid
+   .section .inner .grid .card
+   ============================== */
+
+:root{
+  --bg:#e6efec;
+  --paper:#f7fbfa;
+  --ink:#0f1a17;
+  --muted:#4b5a56;
+  --line:rgba(15,26,23,.14);
+  --accent:#1e6b5f;
+  --accent2:#2b3a66;
+  --shadow: 0 18px 55px rgba(0,0,0,.18);
+  --r:18px;
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+
+body{
+  margin:0;
+  color:var(--ink);
+  background: var(--bg);
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* ===== LEFT RAIL NAV (not top tabs) ===== */
+.nav{
+  position: sticky;
+  top: 0;
+  z-index: 100;        /* higher than everything */
+}
+
+.nav-inner{
+  position: fixed;
+  top: 22px;
+  left: 22px;
+  width: 250px;
+  padding: 18px 16px;
+  background: rgba(247,251,250,.88);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  z-index: 10;
+}
+
+.brand .name{
+  font-weight: 900;
+  letter-spacing:.10em;
+  text-transform: uppercase;
+  font-size: 1.05rem;
+}
+.brand .sub{
+  margin-top: 4px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: .92rem;
+  color: var(--muted);
+}
+
+.nav-links{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap: 10px;
+}
+
+.nav-links a{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  text-decoration:none;
+  color: var(--ink);
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+.nav-links a:hover{
+  background: rgba(30,107,95,.08);
+  border-color: rgba(30,107,95,.25);
+  transform: translateX(2px);
+}
+
+.nav-links a.active{
+  background: rgba(30,107,95,.14);
+  border-color: rgba(30,107,95,.35);
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.toggle{
+  margin-top: 10px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,26,23,.18);
+  background: rgba(247,251,250,.85);
+  cursor: pointer;
+}
+.toggle:hover{ border-color: rgba(30,107,95,.35); }
+
+/* ===== MAIN PAGE AREA ===== */
+/* You use BOTH patterns: some pages have .container, landing has .hero directly */
+.container{
+  max-width: 980px;
+  margin-left: 300px;
+  padding: 56px 40px 80px;
+}
+
+/* Landing page: if hero is not wrapped in .container, push it too */
+body > .hero{
+  max-width: 980px;
+  margin-left: 300px;
+  padding: 56px 40px 0;
+}
+
+/* ===== HERO / TOP SECTION ===== */
+.hero{
+  background: rgba(247,251,250,.78);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  position:relative;
+}
+
+/* Decorative blobs */
+.hero::before{
+  content:"";
+  position:absolute;
+  right:-160px;
+  top:-140px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(30,107,95,.20), transparent 62%);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  right:-220px;
+  bottom:-220px;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(43,58,102,.14), transparent 62%);
+}
+
+/* Your landing hero uses .inner */
+.hero .inner{
+  padding: 34px 34px;
+  position:relative;
+  z-index:1;
+}
+
+/* Your landing uses .hero-grid */
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 18px;
+  align-items:start;
+}
+
+.hero h1{
+  margin:0 0 10px;
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing:.01em;
+}
+
+.hero p{
+  margin:0 0 16px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 72ch;
+}
+
+/* Remove “pills/btnrow” cramped stacking in style2 -> make them look like editorial tags */
+.pills{
+  display:flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 14px 0 18px;
+}
+.pill{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-size: .9rem;
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(15,26,23,.18);
+  background: rgba(247,251,250,.9);
+  color: var(--ink);
+}
+
+/* Buttons become clean “editorial buttons” */
+.btnrow{
+  display:flex;
+  gap: 12px;
+  flex-wrap:wrap;
+  margin: 10px 0 16px;
+}
+
+.btn{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,26,23,.18);
+  text-decoration:none;
+  color: var(--ink);
+  background: rgba(247,251,250,.92);
+}
+.btn-primary{
+  background: rgba(30,107,95,.14);
+  border-color: rgba(30,107,95,.35);
+  color: var(--accent);
+  font-weight: 800;
+}
+.btn-outline:hover,
+.btn:hover{
+  border-color: rgba(30,107,95,.35);
+}
+
+/* Backbar links */
+.backbar{
+  margin-top: 8px;
+}
+.backbar a{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--accent);
+  text-decoration:none;
+  margin-right: 14px;
+  border-bottom: 1px solid rgba(30,107,95,.35);
+  padding-bottom: 2px;
+}
+
+/* Profile image: make it a “stamp” (not huge) */
+.profile{
+  display:flex;
+  justify-content:flex-end;
+}
+.profile img{
+  width: min(240px, 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(15,26,23,.18);
+  box-shadow: 0 14px 35px rgba(0,0,0,.18);
+  display:block;
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  margin-top: 34px;
+}
+.section .inner{
+  max-width: 980px;
+}
+
+.section h2{
+  font-size: 1.2rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 900;
+  margin: 0 0 14px;
+}
+
+/* Your cards grid */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.card{
+  background: rgba(247,251,250,.92);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.k{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  text-transform: uppercase;
+  letter-spacing:.12em;
+  font-size: .78rem;
+  color: var(--accent2);
+  margin-bottom: 8px;
+  font-weight: 900;
+}
+
+.v{
+  color: var(--ink);
+  line-height: 1.65;
+  font-size: 1.02rem;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  max-width: 980px;
+  margin-left: 300px;
+  padding: 28px 40px 40px;
+  color: var(--muted);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  border-top: 1px solid var(--line);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 980px){
+  .nav-inner{
+    position: static;
+    width: auto;
+    margin: 18px;
+  }
+
+  .container, body > .hero, .footer{
+    margin-left: 0;
+    padding: 26px 18px 60px;
+    max-width: none;
+  }
+
+  .hero-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .profile{
+    justify-content:flex-start;
+  }
+
+  .grid{
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================
+   ALIVE ANIMATIONS PACK
+   ========================= */
+
+:root{
+  --ease-cine: cubic-bezier(.2,.8,.2,1);
+  --t-fast: 160ms;
+  --t-med:  320ms;
+  --t-slow: 700ms;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}
+
+/* Page enter */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-enter{
+  animation: pageIn 520ms var(--ease-cine) both;
+}
+
+/* Hero cinematic */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+.hero-anim{
+  animation: heroIn 900ms var(--ease-cine) both;
+}
+
+/* Scroll reveal */
+.reveal{
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 650ms var(--ease-cine),
+              transform 650ms var(--ease-cine);
+  will-change: opacity, transform;
+}
+.reveal.show{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.stagger > *{
+  opacity: 0;
+  transform: translateY(12px);
+}
+.stagger.show > *{
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 650ms var(--ease-cine),
+              transform 650ms var(--ease-cine);
+}
+.stagger.show > *:nth-child(1){ transition-delay: 60ms; }
+.stagger.show > *:nth-child(2){ transition-delay: 120ms; }
+.stagger.show > *:nth-child(3){ transition-delay: 180ms; }
+.stagger.show > *:nth-child(4){ transition-delay: 240ms; }
+.stagger.show > *:nth-child(5){ transition-delay: 300ms; }
+.stagger.show > *:nth-child(6){ transition-delay: 360ms; }
+
+/* Buttons: sheen + press */
+.btn{
+  position: relative;
+  transition: transform var(--t-fast) var(--ease-cine),
+              box-shadow var(--t-fast) var(--ease-cine),
+              background var(--t-fast) var(--ease-cine);
+}
+.btn:hover{ transform: translateY(-2px); }
+.btn:active{ transform: translateY(0) scale(0.985); }
+
+.btn::after{
+  content:"";
+  position:absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,.25) 35%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform var(--t-slow) var(--ease-cine);
+  pointer-events:none;
+}
+.btn:hover::after{ transform: translateX(120%); }
+
+/* Cards: lift */
+.card{
+  transition: transform var(--t-med) var(--ease-cine),
+              box-shadow var(--t-med) var(--ease-cine);
+}
+.card:hover{
+  transform: translateY(-7px);
+  box-shadow: 0 20px 55px rgba(0,0,0,0.12);
+}
+/* ===== Animated background blobs (move around the page) ===== */
+.bg-anim{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* keep content above */
+.hero,
+.container,
+.footer{
+  position: relative;
+  z-index: 1;
+}

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>GenAI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" href="favicon.png" type="image/x-icon">
+  <style>
+    :root{
+      --maroon:#500000;
+      --ink:#151515;
+      --muted:#4b4b4b;
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --card:#ffffff;
+      --line:#d9dde7;
+      --soft:#f1f3f8;
+      --chip:#f3f0f0;
+      --good:#0f9d58;
+      --shadow: 0 14px 40px rgba(0,0,0,.10);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:#f6f7fb;
+    }
+
+    a{ color: var(--maroon); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 26px 16px 60px;
+    }
+
+    /* Top bar */
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.85);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .brand .name{
+      font-weight: 850;
+      letter-spacing:.2px;
+      font-size: 1.05rem;
+    }
+    .brand .sub{
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.9);
+      color: var(--ink);
+      font-weight: 750;
+      font-size:.92rem;
+      white-space:nowrap;
+      box-shadow: 0 8px 18px rgba(0,0,0,.06);
+    }
+    .btn.primary{
+      background: rgba(80,0,0,.10);
+      border-color: rgba(80,0,0,.30);
+      color: var(--maroon);
+    }
+    .btn:hover{ text-decoration:none; border-color: rgba(80,0,0,.55); }
+
+    /* Hero */
+    .hero{
+      margin-top: 18px;
+      padding: 22px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+    }
+    .hero h1{
+      margin: 0 0 10px;
+      font-size: clamp(1.7rem, 2.7vw, 2.4rem);
+      letter-spacing:.2px;
+    }
+    .hero p{
+      margin: 0 0 14px;
+      color: var(--muted);
+      max-width: 75ch;
+    }
+
+    .chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid rgba(80,0,0,.15);
+      color: var(--ink);
+      font-weight: 700;
+      font-size:.9rem;
+    }
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(15,157,88,.12);
+    }
+
+    /* Layout */
+    .grid{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .head{
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(241,243,248,.9);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .card .head .title{
+      font-weight: 850;
+      letter-spacing:.2px;
+    }
+    .card .head .meta{
+      color: var(--muted);
+      font-size:.9rem;
+    }
+    .card .body{ padding: 16px; }
+
+    /* Chat UI */
+    .chat{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding: 4px 0;
+    }
+    .bubble{
+      max-width: 85%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(0,0,0,.03);
+      color: var(--ink);
+      line-height:1.45;
+    }
+    .bubble.user{
+      margin-left:auto;
+      background: rgba(80,0,0,.08);
+      border-color: rgba(80,0,0,.18);
+    }
+    .bubble.ai{
+      margin-right:auto;
+      background: rgba(0,0,0,.03);
+    }
+    .bubble b{ color: var(--ink); }
+
+    .hint{
+      margin-top: 10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px dashed rgba(0,0,0,.18);
+      color: var(--muted);
+      background: rgba(0,0,0,.02);
+      font-size:.95rem;
+    }
+
+    /* Prompt textarea */
+    .label{
+      color: var(--muted);
+      font-size: .92rem;
+      margin: 0 0 8px;
+    }
+    textarea{
+      width:100%;
+      min-height: 220px;
+      resize: vertical;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,0,0,.12);
+      background: rgba(0,0,0,.03);
+      color: var(--ink);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      line-height: 1.45;
+      outline:none;
+    }
+    textarea:focus{
+      border-color: rgba(80,0,0,.45);
+      box-shadow: 0 0 0 4px rgba(80,0,0,.10);
+    }
+
+    .small{
+      color: var(--muted);
+      font-size: .92rem;
+      margin-top: 10px;
+    }
+
+    footer{
+      margin-top: 18px;
+      color: rgba(0,0,0,.45);
+      font-size: .92rem;
+      text-align:center;
+    }
+    .accent{
+      color: var(--maroon);
+      font-weight: 850;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="topbar">
+      <div class="brand">
+        <div class="name">Ali Hussein</div>
+        <div class="sub">Computer Engineering</div>
+      </div>
+
+      <div class="actions">
+        <!-- SAFEST: point back to your project landing -->
+        <a class="btn" href="index.html">← Main site</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <h1>AI-Generated Page</h1>
+      <p>
+        This page demonstrates an “assistant-style” UI created using <span class="accent">Generative AI</span>.
+        It uses <span class="accent">inline CSS only</span> and is intentionally kept separate from the site’s
+        two-style visual toggle to preserve a consistent presentation.
+      </p>
+
+      <div class="chips">
+        <span class="chip"><span class="dot"></span> Inline CSS (required)</span>
+        <span class="chip">Assistant UI layout</span>
+        <span class="chip">Prompt included below</span>
+      </div>
+    </section>
+
+    <div class="grid">
+
+      <section class="card">
+        <div class="head">
+          <div class="title">Demo Conversation (Static UI)</div>
+          <div class="meta">GenAI showcase</div>
+        </div>
+        <div class="body">
+          <div class="chat">
+            <div class="bubble user"><b>You:</b> What is the purpose of this website?</div>
+            <div class="bubble ai"><b>AI:</b> This website presents a professional portfolio highlighting hardware-focused projects,
+                                              technical skills, and areas of interest. It is designed to demonstrate clear structure,
+                                              consistent navigation, and thoughtful presentation across multiple sections.</div>
+
+            <div class="bubble user"><b>You:</b> What should a recruiter notice?</div>
+            <div class="bubble ai"><b>AI:</b> A recruiter should notice an emphasis on hardware-oriented thinking, clear communication,
+                                              and organized presentation. The content highlights system-level understanding, practical
+                                              validation, and attention to detail.</div>
+
+            <div class="bubble user"><b>You:</b> What makes this page different?</div>
+            <div class="bubble ai"><b>AI:</b> This GenAI page uses inline CSS (per rubric) and includes the final prompt used to generate the design and wording.</div>
+          </div>
+
+          <div class="hint">
+            Note: This is a static UI demonstration (no real chatbot). It exists to satisfy the project’s GenAI deliverable requirements.
+          </div>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="head">
+          <div class="title">Prompt Used (Required)</div>
+          <div class="meta">HTML textbox (textarea)</div>
+        </div>
+        <div class="body">
+          <p class="label">
+            The text box below contains the final prompt used to create this GenAI page.
+          </p>
+
+<textarea>
+Create a professional GenAI demonstration page for a personal engineering portfolio
+hosted on people.tamu.edu.
+
+Requirements:
+- Use HTML with inline CSS only (no external stylesheets or JavaScript frameworks).
+- Present a clean “AI assistant” style layout with a header, content sections, and a
+  chat-style demo conversation.
+- Include a multiline HTML textarea that displays the final prompt used to generate
+  the page content.
+- If the prompt is long, allow scrolling inside the text box.
+- Clearly label the page as a static demonstration, not a live chatbot.
+</textarea>
+
+          <p class="small">
+            <b>AI Use Statement:</b> Generative AI was used to draft the layout and wording for this page, then revised to better match the project rubric and the site’s overall visual language.
+          </p>
+        </div>
+      </aside>
+
+    </div>
+
+    <footer>
+      &copy; Ali Hussein
+    </footer>
+
+  </div>
+</body>
+</html>
