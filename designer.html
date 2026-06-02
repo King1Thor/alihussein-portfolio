@@ -91,13 +91,33 @@
       <div class="sec-head reveal">
         <div class="eyebrow">// SELECTED EDITS</div>
         <h2 class="h-sec">A few of my reels</h2>
-        <p class="lead">A few of my favorite edits, playing right here. Hit play on any one.</p>
+        <p class="lead">A few of my favorite edits, hosted right here. Click any one to play it full size, no Instagram needed.</p>
       </div>
       <div class="reel-grid">
-        <div class="reel-frame reveal"><iframe src="https://www.instagram.com/p/DYOkr7qhuvY/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="EDIT 01"></iframe></div>
-        <div class="reel-frame reveal"><iframe src="https://www.instagram.com/p/DXgMlt0gbiQ/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="EDIT 02"></iframe></div>
-        <div class="reel-frame reveal"><iframe src="https://www.instagram.com/p/DRllXW-jfNR/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="EDIT 03"></iframe></div>
-        <div class="reel-frame reveal"><iframe src="https://www.instagram.com/p/DRjiyClDf7q/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="EDIT 04"></iframe></div>
+        <div class="reel-card reveal" data-reel="assets/reels/reel1.mp4">
+          <video preload="metadata" muted playsinline><source src="assets/reels/reel1.mp4" type="video/mp4"></video>
+          <div class="reel-ov"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="reel-fallback">add this clip as<br><b>assets/reels/reel1.mp4</b></div>
+          <span class="reel-lab">EDIT 01</span>
+        </div>
+        <div class="reel-card reveal" data-reel="assets/reels/reel2.mp4">
+          <video preload="metadata" muted playsinline><source src="assets/reels/reel2.mp4" type="video/mp4"></video>
+          <div class="reel-ov"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="reel-fallback">add this clip as<br><b>assets/reels/reel2.mp4</b></div>
+          <span class="reel-lab">EDIT 02</span>
+        </div>
+        <div class="reel-card reveal" data-reel="assets/reels/reel3.mp4">
+          <video preload="metadata" muted playsinline><source src="assets/reels/reel3.mp4" type="video/mp4"></video>
+          <div class="reel-ov"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="reel-fallback">add this clip as<br><b>assets/reels/reel3.mp4</b></div>
+          <span class="reel-lab">EDIT 03</span>
+        </div>
+        <div class="reel-card reveal" data-reel="assets/reels/reel4.mp4">
+          <video preload="metadata" muted playsinline><source src="assets/reels/reel4.mp4" type="video/mp4"></video>
+          <div class="reel-ov"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+          <div class="reel-fallback">add this clip as<br><b>assets/reels/reel4.mp4</b></div>
+          <span class="reel-lab">EDIT 04</span>
+        </div>
       </div>
     </div>
   </section>
@@ -127,6 +147,11 @@
       </div>
     </div>
   </section>
+
+  <div id="reelLB" aria-hidden="true">
+    <button class="reel-lb-x" type="button" aria-label="Close">&#10005;</button>
+    <video controls playsinline preload="auto"></video>
+  </div>
   <footer class="site">
     <div class="wrap">
       <div class="foot-grid">

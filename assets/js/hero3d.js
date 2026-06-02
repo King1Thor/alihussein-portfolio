@@ -167,8 +167,6 @@
     const sub = new THREE.Mesh(new THREE.BoxGeometry(SZ, 0.28, SZ),
       [subSide, subSide, subTop, subSide, subSide, subSide]);
     cpu.add(sub);
-    cpu.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(SZ + 0.02, 0.3, SZ + 0.02)),
-      new THREE.LineBasicMaterial({ color: 0x58b6ff, transparent: true, opacity: 0.55 })));
 
     // gold contact-pad ring on substrate top
     const padMat = new THREE.MeshStandardMaterial({ color: 0xd8b15a, metalness: 1, roughness: 0.3, emissive: 0x3a2c08, emissiveIntensity: 0.35 });

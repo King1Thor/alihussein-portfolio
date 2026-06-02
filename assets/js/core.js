@@ -385,31 +385,31 @@
         ["Verify", "Tested ordering, role-based auth, and the dashboard flows end to end, then deployed on Render."],
         ["Result", "A live POS platform that handles the full ordering-to-management workflow."]
       ]},
-      "Single-Cycle ARMv8 CPU": { img: "assets/img/armv8_whiteboard.jpeg", steps: [
+      "Single-Cycle ARMv8 CPU": { steps: [
         ["Problem", "Build a working ARMv8 processor in Verilog that runs real instructions."],
         ["Design", "Laid out the single-cycle datapath, fetch, decode, register file, ALU, data memory, write-back, plus the control unit for R-type, load/store, and branch."],
         ["Verify", "Ran directed instruction tests and traced datapath and control signals to confirm each instruction behaved correctly."],
         ["Result", "A full single-cycle core that correctly executes the target instruction set."]
       ]},
-      "LRU Cache Simulator": { img: "assets/img/math_whiteboard.jpeg", steps: [
+      "LRU Cache Simulator": { steps: [
         ["Problem", "Measure how cache configuration affects hit and miss rates."],
         ["Design", "Built a configurable set-associative cache in C++ with an O(1) LRU policy using a hash map plus a doubly linked list."],
         ["Verify", "Fed memory traces through it and checked hit/miss counts against expected behavior across configurations."],
         ["Result", "A simulator that reports hit rate for any cache setup, handy for studying memory-hierarchy tradeoffs."]
       ]},
-      "Digital Combination Lock": { img: "assets/img/alu_whiteboard.jpeg", steps: [
+      "Digital Combination Lock": { steps: [
         ["Problem", "Implement a lock that opens only on the correct code, on real hardware."],
         ["Design", "Described the lock as a finite state machine in Verilog; onboard switches enter the code and LEDs show locked/unlocked state."],
         ["Verify", "Loaded it onto the ZYBO Z7-10 and confirmed the compare logic and waveforms on the board."],
         ["Result", "A hardware lock that unlocks only for the correct sequence."]
       ]},
-      "Motion Sensor Alarm": { img: "assets/img/breadboard_output.jpeg", steps: [
+      "Motion Sensor Alarm": { steps: [
         ["Problem", "Detect motion and raise an alarm reliably."],
         ["Design", "Built an infrared detector feeding a comparator that drives a buzzer when the threshold is crossed."],
         ["Verify", "Calibrated the threshold and tested across different ambient-light conditions."],
         ["Result", "A working alarm that triggers on presence with few false alarms."]
       ]},
-      "Banking Authentication Program": { img: "assets/img/bank_whiteboard.jpeg", steps: [
+      "Banking Authentication Program": { steps: [
         ["Problem", "Authenticate users from the command line with solid error handling."],
         ["Design", "Wrote a C++ app that verifies credentials and handles bad input gracefully."],
         ["Verify", "Debugged with gdb breakpoints and step-through execution against automated test scripts."],
@@ -454,6 +454,37 @@
     $$(".pm-x", modal).forEach(b => b.addEventListener("click", close));
     modal.addEventListener("click", e => { if (e.target === modal) close(); });
     addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+  })();
+
+  /* -------------------------------------------------- REEL PLAYER (self-hosted) */
+  (function reels() {
+    const cards = $$(".reel-card");
+    if (!cards.length) return;
+    const lb = $("#reelLB");
+    const vid = lb ? $("video", lb) : null;
+    cards.forEach(c => {
+      const v = $("video", c);
+      if (v) v.addEventListener("error", () => c.classList.add("missing"), true);
+      c.addEventListener("click", () => {
+        const src = c.dataset.reel;
+        if (!lb || !vid || c.classList.contains("missing")) return;
+        vid.src = src;
+        lb.classList.add("open");
+        document.documentElement.classList.add("modal-open");
+        vid.play().catch(() => {});
+      });
+    });
+    if (lb) {
+      const close = () => {
+        lb.classList.remove("open");
+        document.documentElement.classList.remove("modal-open");
+        if (vid) { vid.pause(); vid.removeAttribute("src"); vid.load(); }
+      };
+      const x = $(".reel-lb-x", lb);
+      if (x) x.addEventListener("click", close);
+      lb.addEventListener("click", e => { if (e.target === lb) close(); });
+      addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+    }
   })();
 })();
 
