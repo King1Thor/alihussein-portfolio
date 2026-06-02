@@ -272,12 +272,12 @@
     cpu.rotation.x = 0.17;
 
     let state = 0; setLabel(0);
-    const tgt = { lidY: 0.3, lidO: 1, dieO: 0, txO: 0, tx2O: 0 };
+    const tgt = { lidY: 0.3, lidO: 1, dieO: 0, txO: 0, tx2O: 0, camZ: 5.8, camY: 4.2, lookY: 0.15 };
     function applyTargets() {
-      if (state === 0) { tgt.lidY = 0.3; tgt.lidO = 1; tgt.dieO = 0; tgt.txO = 0; tgt.tx2O = 0; }
-      else if (state === 1) { tgt.lidY = 1.9; tgt.lidO = 0.1; tgt.dieO = 1; tgt.txO = 0; tgt.tx2O = 0; }
-      else if (state === 2) { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.28; tgt.txO = 1; tgt.tx2O = 0; }
-      else { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.16; tgt.txO = 0.22; tgt.tx2O = 1; }
+      if (state === 0) { tgt.lidY = 0.3; tgt.lidO = 1; tgt.dieO = 0; tgt.txO = 0; tgt.tx2O = 0; tgt.camZ = 5.8; tgt.camY = 4.2; tgt.lookY = 0.15; }
+      else if (state === 1) { tgt.lidY = 1.9; tgt.lidO = 0.1; tgt.dieO = 1; tgt.txO = 0; tgt.tx2O = 0; tgt.camZ = 4.7; tgt.camY = 3.3; tgt.lookY = 0.3; }
+      else if (state === 2) { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.28; tgt.txO = 1; tgt.tx2O = 0; tgt.camZ = 3.7; tgt.camY = 2.5; tgt.lookY = 0.4; }
+      else { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.16; tgt.txO = 0.22; tgt.tx2O = 1; tgt.camZ = 2.8; tgt.camY = 1.8; tgt.lookY = 0.42; }
     }
     stage.addEventListener("click", () => { state = (state + 1) % 4; setLabel(state); applyTargets(); });
     stage.style.cursor = "pointer";
@@ -292,6 +292,9 @@
       const t = clock.getElapsedTime();
       cpu.rotation.y = t * 0.3;
       cpu.position.y = Math.sin(t * 1.05) * 0.06;
+      camera.position.z += (tgt.camZ - camera.position.z) * 0.06;
+      camera.position.y += (tgt.camY - camera.position.y) * 0.06;
+      camera.lookAt(0, tgt.lookY, 0);
       lid.position.y += (tgt.lidY - lid.position.y) * 0.08;
       lidTop.opacity += (tgt.lidO - lidTop.opacity) * 0.08; lidSide.opacity = lidTop.opacity; rimMat.opacity = lidTop.opacity;
       lid.visible = rim.visible = lidTop.opacity > 0.02;

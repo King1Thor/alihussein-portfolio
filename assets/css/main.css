@@ -1139,3 +1139,54 @@ html[data-theme="light"] .seg-pick select{ background:rgba(20,32,66,.04); }
   background:#000; box-shadow:var(--shadow-sm); }
 .reel-embed iframe{ width:100%; height:680px; display:block; border:0; }
 @media(max-width:760px){ .reel-embed iframe{ height:640px; } }
+
+/* =====================================================================
+   v5 FIXES — dark dropdowns, chrome-cropped reels, more animation
+   ===================================================================== */
+/* native <select> option list was unreadable in dark mode */
+select option{ background:#0e1320; color:#eaf0fb; }
+html[data-theme="light"] select option{ background:#ffffff; color:#11151f; }
+
+/* CREATIVE reels: crop Instagram's white header/footer, show just the video */
+.reel-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:22px; max-width:760px; margin-inline:auto; }
+@media(max-width:680px){ .reel-grid{ grid-template-columns:1fr; max-width:380px; } }
+.reel-frame{ position:relative; width:100%; padding-bottom:124%; overflow:hidden;
+  border-radius:18px; background:#000; border:1px solid var(--line); box-shadow:var(--shadow-sm);
+  transition:transform .4s var(--ease), box-shadow .4s, border-color .4s; }
+.reel-frame:hover{ transform:translateY(-5px); border-color:var(--steel); box-shadow:0 0 30px var(--steel-glow); }
+.reel-frame iframe{ position:absolute; left:50%; transform:translateX(-50%); top:-54px;
+  width:100%; height:calc(100% + 232px); border:0; background:#000; }
+
+/* SKILLS: animated shimmer that sweeps across each filled bar */
+.bar .track{ position:relative; }
+.bar .track i{ position:relative; overflow:hidden; }
+.bar .track i::after{ content:''; position:absolute; inset:0; border-radius:99px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  transform:translateX(-100%); animation:barShine 2.8s var(--ease) infinite; }
+@keyframes barShine{ 0%{ transform:translateX(-100%);} 55%,100%{ transform:translateX(220%);} }
+/* skill cards: pop the icon a touch on hover */
+.fcard .ic{ transition:transform .4s var(--ease), box-shadow .4s; }
+.fcard:hover .ic{ transform:scale(1.08) rotate(-3deg); box-shadow:0 0 22px var(--steel-glow); }
+
+/* EXPERIENCE: pulsing nodes, line that draws in, staggered items */
+.tl-item::before{ animation:dotPulse 2.6s ease-in-out infinite; }
+@keyframes dotPulse{ 0%,100%{ box-shadow:0 0 6px var(--maroon-glow); }
+  50%{ box-shadow:0 0 18px 3px var(--maroon-glow); } }
+.reveal .timeline::before{ transform:scaleY(0); transform-origin:top; }
+.reveal.show .timeline::before{ animation:lineGrow 1.1s var(--ease-out) .1s forwards; }
+@keyframes lineGrow{ to{ transform:scaleY(1); } }
+.reveal .tl-item{ opacity:0; }
+.reveal.show .tl-item{ animation:tlIn .6s var(--ease-out) both; }
+.reveal.show .tl-item:nth-child(1){ animation-delay:.10s; }
+.reveal.show .tl-item:nth-child(2){ animation-delay:.28s; }
+.reveal.show .tl-item:nth-child(3){ animation-delay:.46s; }
+.reveal.show .tl-item:nth-child(4){ animation-delay:.64s; }
+@keyframes tlIn{ from{ opacity:0; transform:translateX(14px); } to{ opacity:1; transform:none; } }
+
+/* animated gradient on the .grad headings (subtle living sheen) */
+.grad{ background-size:200% auto; animation:gradShift 6s linear infinite; }
+@keyframes gradShift{ to{ background-position:200% center; } }
+@media(prefers-reduced-motion:reduce){
+  .bar .track i::after,.tl-item::before,.reveal.show .tl-item,.reveal.show .timeline::before,.grad{ animation:none; }
+  .reveal .tl-item{ opacity:1; } .reveal .timeline::before{ transform:none; }
+}

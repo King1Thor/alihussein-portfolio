@@ -46,10 +46,8 @@
       a:"Outside engineering, Ali edits short-form video and designs visuals using <b>CapCut</b>, <b>Adobe Premiere Pro</b>, <b>After Effects</b>, <b>Photoshop</b>, and <b>DaVinci Resolve</b>. See the <b>Creative</b> page." },
     { id:"verification", keys:["verification","verify","test","rtl","validate","debug"],
       a:"Verification is a core theme of Ali's work: directed testing and waveform inspection (GTKWave), on-board FPGA validation, and gdb debugging for C/C++. The philosophy: <b>measure and verify rather than guess.</b>" },
-    { id:"contact", keys:["contact","email","linkedin","github","phone","connect","message"],
+    { id:"contact", keys:["contact","email","linkedin","github","phone","connect","message","resume","cv"],
       a:"Reach Ali at <b>ali.hussein24@tamu.edu</b> or via the <b>Contact</b> page. His LinkedIn and GitHub are in the footer of every page." },
-    { id:"resume", keys:["resume","cv","download","pdf"],
-      a:"Ali's full resume is embedded on the <b>Skills</b> page, with a download button too." },
   ];
 
   const GREET = ["hi","hey","hello","yo","sup","howdy"];
