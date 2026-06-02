@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Creative · Ali Hussein</title>
-  <meta name="description" content="The creative side of Ali Hussein: short-form video editing and design using CapCut, Adobe Premiere Pro, After Effects, Photoshop, and DaVinci Resolve.">
+  <title>Playground · Ali Hussein</title>
+  <meta name="description" content="Interactive hardware toys by Ali Hussein: a live LRU cache simulator, a logic-gate explorer, and a combination-lock finite state machine.">
   <link rel="icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,10 +31,10 @@
     <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="projects.html">Projects</a>
-      <a href="playground.html">Playground</a>
+      <a class="active" href="playground.html">Playground</a>
       <a href="skills.html">Skills</a>
       <a href="experience.html">Experience</a>
-      <a class="active" href="designer.html">Creative</a>
+      <a href="designer.html">Creative</a>
       <a class="nav-cta" href="contact.html">Contact</a>
     </div>
     <button class="theme-toggle" aria-label="Toggle light or dark mode" type="button">
@@ -45,85 +45,85 @@
   </nav>
 
   <header class="banner wrap">
-    <div class="eyebrow reveal show">// CREATIVE STUDIO</div>
-    <h1 class="reveal show d1">I also <span class="grad">edit &amp; design</span></h1>
-    <p class="lead reveal show d2">Outside the lab I edit short-form video and design visuals. I started on mobile with CapCut and grew into the desktop tools the pros use. Same instinct as engineering: take raw pieces, shape them, and sweat the details until it lands.</p>
+    <div class="eyebrow reveal show">// INTERACTIVE LAB</div>
+    <h1 class="reveal show d1">Play with the <span class="grad">hardware</span></h1>
+    <p class="lead reveal show d2">Small interactive versions of the ideas behind my projects. Click, toggle, and step through them, no install required.</p>
   </header>
 
-  <section style="padding-top:30px;">
+  <!-- LRU CACHE -->
+  <section style="padding-top:24px;">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow">// WHAT I WORK WITH</div>
-        <h2 class="h-sec">My editing toolkit</h2>
-        <p class="lead">From quick mobile cuts to full timeline edits and color work, these are the apps I reach for.</p>
+        <div class="eyebrow">// MEMORY SYSTEMS</div>
+        <h2 class="h-sec">LRU cache, live</h2>
+        <p class="lead">The same idea as my <b>LRU Cache Simulator</b>. Pick the geometry, enter a list of memory addresses, and step through to watch hits, misses, and least-recently-used eviction.</p>
       </div>
-      <div class="soft-grid">
-        <div class="glass soft reveal">
-          <div class="badge" style="background:linear-gradient(135deg,#00e0c6,#0098ff);">Cc</div>
-          <div><div class="n">CapCut</div><div class="r">Mobile &amp; desktop editing</div></div>
+      <div class="glass lab reveal">
+        <div class="lab-controls">
+          <label>Sets
+            <select id="lruSets"><option>4</option><option>8</option></select></label>
+          <label>Ways
+            <select id="lruWays"><option>1</option><option selected>2</option><option>4</option></select></label>
+          <label class="grow">Addresses
+            <input id="lruSeq" type="text" value="0,4,8,0,12,4,16,0,8,20"></label>
+          <button class="btn btn-ghost" id="lruStep" type="button">Step</button>
+          <button class="btn btn-primary" id="lruRun" type="button">Run</button>
+          <button class="btn btn-ghost" id="lruReset" type="button">Reset</button>
         </div>
-        <div class="glass soft reveal">
-          <div class="badge" style="background:linear-gradient(135deg,#9a4dff,#3b2a8c);">Pr</div>
-          <div><div class="n">Adobe Premiere Pro</div><div class="r">Timeline video editing</div></div>
+        <div class="lab-stats">
+          <span>Access <b id="lruCur">&mdash;</b></span>
+          <span>Hits <b id="lruHits">0</b></span>
+          <span>Misses <b id="lruMiss">0</b></span>
+          <span>Hit rate <b id="lruRate">0%</b></span>
         </div>
-        <div class="glass soft reveal">
-          <div class="badge" style="background:linear-gradient(135deg,#c39bff,#5a3df0);">Ae</div>
-          <div><div class="n">After Effects</div><div class="r">Motion graphics &amp; FX</div></div>
-        </div>
-        <div class="glass soft reveal">
-          <div class="badge" style="background:linear-gradient(135deg,#2aa9ff,#063b73);">Ps</div>
-          <div><div class="n">Adobe Photoshop</div><div class="r">Graphics &amp; thumbnails</div></div>
-        </div>
-        <div class="glass soft reveal">
-          <div class="badge" style="background:linear-gradient(135deg,#3a3f4a,#11151c);">Dr</div>
-          <div><div class="n">DaVinci Resolve</div><div class="r">Color grading</div></div>
-        </div>
-        <div class="glass soft reveal">
-          <div class="badge" style="background:linear-gradient(135deg,#00c4cc,#7d2ae8);">Cv</div>
-          <div><div class="n">Canva</div><div class="r">Quick social graphics</div></div>
-        </div>
+        <div class="lru-msg" id="lruMsg"></div>
+        <div class="lru-grid" id="lruGrid"></div>
       </div>
     </div>
   </section>
 
-  <section>
+  <!-- LOGIC GATES + FSM -->
+  <section style="padding-top:14px;">
     <div class="wrap">
       <div class="sec-head reveal">
-        <div class="eyebrow">// SELECTED EDITS</div>
-        <h2 class="h-sec">A few of my reels</h2>
-        <p class="lead">A few of my favorite edits. Tap any one to watch it on Instagram.</p>
+        <div class="eyebrow">// DIGITAL LOGIC</div>
+        <h2 class="h-sec">Gates &amp; state machines</h2>
+        <p class="lead">The building blocks of every chip. Flip the inputs to see a gate's output and truth table, then try the combination-lock state machine from my FPGA project.</p>
       </div>
-      <div class="reel-grid">
-        <a class="reel reveal" href="https://www.instagram.com/p/DYOkr7qhuvY/" target="_blank" rel="noopener"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><span class="lab">EDIT 01</span><span class="watch">Watch on Instagram &#8599;</span></a>
-        <a class="reel reveal" href="https://www.instagram.com/p/DXgMlt0gbiQ/" target="_blank" rel="noopener"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><span class="lab">EDIT 02</span><span class="watch">Watch on Instagram &#8599;</span></a>
-        <a class="reel reveal" href="https://www.instagram.com/p/DRllXW-jfNR/" target="_blank" rel="noopener"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><span class="lab">EDIT 03</span><span class="watch">Watch on Instagram &#8599;</span></a>
-        <a class="reel reveal" href="https://www.instagram.com/p/DRjiyClDf7q/" target="_blank" rel="noopener"><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><span class="lab">EDIT 04</span><span class="watch">Watch on Instagram &#8599;</span></a>
-      </div>
-    </div>
-  </section>
+      <div class="lab-two">
 
-  <section style="padding-top:6px;">
-    <div class="wrap">
-      <div class="glass ig-cta reveal">
-        <div>
-          <h3>Watch the full set on Instagram</h3>
-          <p>More edits live on my page <b>@maxvj.o</b>, full reels, motion work, and color grades.</p>
+        <div class="glass lab reveal">
+          <div class="lab-cap">Logic gate explorer</div>
+          <div class="gate-row">
+            <div class="gate-inputs">
+              <button class="bit" id="gA" type="button">A = 0</button>
+              <button class="bit" id="gB" type="button">B = 0</button>
+            </div>
+            <select id="gSel" aria-label="Gate">
+              <option>AND</option><option>OR</option><option>NAND</option>
+              <option>NOR</option><option>XOR</option><option>XNOR</option><option>NOT</option>
+            </select>
+            <div class="gate-out">OUT = <b id="gOut">0</b><span class="led" id="gLed"></span></div>
+          </div>
+          <table class="ttable" id="gTable"></table>
         </div>
-        <a class="btn btn-primary" href="https://www.instagram.com/maxvj.o/" target="_blank" rel="noopener">@maxvj.o on Instagram &#8599;</a>
-      </div>
-    </div>
-  </section>
 
-  <section style="padding-top:34px;">
-    <div class="wrap">
-      <div class="glass cta-band reveal">
-        <div class="eyebrow" style="justify-content:center;">// TWO SIDES, ONE BUILDER</div>
-        <h2>Engineer by training, editor by instinct.</h2>
-        <p>Whether it's RTL or a reel, I like making things that work and feel sharp. Want to see the engineering side?</p>
-        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
-          <a class="btn btn-primary" href="projects.html">View engineering projects</a>
-          <a class="btn btn-ghost" href="contact.html">Get in touch</a>
+        <div class="glass lab reveal d1">
+          <div class="lab-cap">Combination-lock FSM &middot; code 1 &middot; 3 &middot; 2</div>
+          <div class="fsm-row">
+            <div class="fsm-node active">LOCKED</div><span class="fsm-arrow">&#8594;</span>
+            <div class="fsm-node">S1</div><span class="fsm-arrow">&#8594;</span>
+            <div class="fsm-node">S2</div><span class="fsm-arrow">&#8594;</span>
+            <div class="fsm-node">OPEN</div>
+          </div>
+          <div class="fsm-keys" id="fsmKeys">
+            <button data-k="1" type="button">1</button><button data-k="2" type="button">2</button>
+            <button data-k="3" type="button">3</button><button data-k="4" type="button">4</button>
+          </div>
+          <div class="fsm-msg" id="fsmMsg"></div>
+          <button class="btn btn-ghost" id="fsmReset" type="button" style="margin-top:14px;">Reset lock</button>
         </div>
+
       </div>
     </div>
   </section>
@@ -168,5 +168,6 @@
   </div>
   <script src="assets/js/core.js"></script>
   <script src="assets/js/assistant.js"></script>
+  <script src="assets/js/playground.js"></script>
 </body>
 </html>

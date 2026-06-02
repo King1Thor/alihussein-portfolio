@@ -42,3 +42,19 @@ endpoint. Never put an API key directly in this file - it's public.
 All copy lives directly in the HTML. To change a project, edit its card in `projects.html`
 (and the matching featured card in `index.html`). Skill levels are the `data-fill` numbers
 on the bars in `skills.html`. Replace images in `assets/img/` (keep the same filenames, or update the `src`).
+
+## Setup hooks (two optional one-liners)
+
+**Make the contact form send to your inbox:** sign up free at https://web3forms.com
+(it emails you an access key), then open `build_site.py`, find `var ACCESS_KEY = "";`
+in the contact script, paste your key between the quotes, and run `python3 build_site.py`.
+Until you set it, the form falls back to opening the visitor's email app.
+
+**Wire a real AI into AIDEN:** stand up a small backend that holds your API key
+server-side and returns `{ "reply": "..." }`, then set `const AI_ENDPOINT = "...";`
+at the top of `assets/js/assistant.js`. Until set, AIDEN uses its built-in answers.
+
+## New in this version
+- Interactive **Playground** page: live LRU cache simulator, logic-gate explorer, combination-lock FSM (`assets/js/playground.js`).
+- Project popups are now **case studies** (artifact image + Problem/Design/Verify/Result), driven by the `CASE` map in `assets/js/core.js`. To add a "View code" button, give a card `data-repo="https://github.com/..."`.
+- Creative page reels link to real Instagram posts; edit them in the `reel(...)` calls in `build_site.py`.

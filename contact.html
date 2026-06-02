@@ -31,6 +31,7 @@
     <div class="nav-links" id="navLinks">
       <a href="index.html">Home</a>
       <a href="projects.html">Projects</a>
+      <a href="playground.html">Playground</a>
       <a href="skills.html">Skills</a>
       <a href="experience.html">Experience</a>
       <a href="designer.html">Creative</a>
@@ -86,9 +87,11 @@
             <label for="cMsg">Message</label>
             <textarea id="cMsg" placeholder="Hey Ali, I wanted to reach out about..."></textarea>
           </div>
-          <button class="btn btn-primary" id="cSend" type="button" style="width:100%; justify-content:center;">Compose email &#8594;</button>
+          <button class="btn btn-primary" id="cSend" type="button" style="width:100%; justify-content:center;">Send message &#8594;</button>
+          <input type="text" id="cHP" name="botcheck" tabindex="-1" autocomplete="off" style="position:absolute; left:-9999px;" aria-hidden="true">
+          <div id="cStatus" class="form-status"></div>
           <p style="font-size:.78rem; color:var(--ink-dim); margin-top:12px; line-height:1.5;">
-            This opens your own email app with the message pre-filled. No data is sent or stored anywhere.
+            Your message goes straight to my inbox. Prefer email? <a href="mailto:ali.hussein24@tamu.edu" style="color:var(--steel-2);">ali.hussein24@tamu.edu</a>
           </p>
         </div>
 
@@ -123,6 +126,7 @@
           <h4>Navigate</h4>
           <a href="index.html">Home</a>
           <a href="projects.html">Projects</a>
+          <a href="playground.html">Playground</a>
           <a href="skills.html">Skills</a>
           <a href="experience.html">Experience</a>
           <a href="designer.html">Creative</a>
@@ -151,11 +155,41 @@
   <script src="assets/js/assistant.js"></script>
   <script>
   (function(){
+    /* === To make this form SEND to your inbox, paste your free Web3Forms ===
+       access key below (get one at https://web3forms.com, it emails you a key).
+       Until then, the button falls back to opening your email app. */
+    var ACCESS_KEY = "";
+
     var b=document.getElementById('cSend'); if(!b) return;
+    var status=document.getElementById('cStatus');
+    function val(id){ var e=document.getElementById(id); return e?(e.value||'').trim():''; }
+    function setStatus(msg, cls){ if(status){ status.textContent=msg; status.className='form-status '+(cls||''); } }
+
     b.addEventListener('click', function(){
-      var n=(document.getElementById('cName').value||'').trim();
-      var e=(document.getElementById('cEmail').value||'').trim();
-      var m=(document.getElementById('cMsg').value||'').trim();
+      var n=val('cName'), e=val('cEmail'), m=val('cMsg');
+      if(document.getElementById('cHP') && document.getElementById('cHP').value) return; /* honeypot */
+      if(!m){ setStatus('Please write a message first.', 'bad'); return; }
+
+      if(ACCESS_KEY){
+        setStatus('Sending…', '');
+        b.disabled = true;
+        fetch('https://api.web3forms.com/submit', {
+          method:'POST', headers:{'Content-Type':'application/json', 'Accept':'application/json'},
+          body: JSON.stringify({
+            access_key: ACCESS_KEY,
+            subject: n ? ('Portfolio message from '+n) : 'Portfolio message',
+            name: n || 'Anonymous', email: e || 'no-reply@alihussein.tech', message: m
+          })
+        }).then(function(r){ return r.json(); }).then(function(d){
+          b.disabled = false;
+          if(d.success){ setStatus('Thanks, your message was sent.', 'ok');
+            ['cName','cEmail','cMsg'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; }); }
+          else { setStatus('Something went wrong. Email me directly instead.', 'bad'); }
+        }).catch(function(){ b.disabled = false; setStatus('Network error. Email me directly instead.', 'bad'); });
+        return;
+      }
+
+      /* fallback: open the visitor's email app */
       var subj=n?('Portfolio contact from '+n):'Portfolio contact';
       var body=m+(e?('\n\nfrom '+n+' ('+e+')'):('\n\nfrom '+n));
       window.location.href='mailto:ali.hussein24@tamu.edu?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);

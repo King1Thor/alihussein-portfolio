@@ -367,43 +367,94 @@
     }));
   })();
 
-  /* -------------------------------------------------- PROJECT POPUP (works on any page) */
+  /* -------------------------------------------------- PROJECT POPUP (case studies) */
   (function projModal() {
     const modal = $("#projModal");
     if (!modal) return;
     const elKind = $("#pmKind", modal), elTitle = $("#pmTitle", modal),
           elDesc = $("#pmDesc", modal), elTags = $("#pmTags", modal),
-          elVisit = $("#pmVisit", modal), elMark = $("#pmMark", modal);
+          elVisit = $("#pmVisit", modal), elMark = $("#pmMark", modal),
+          elImg = $("#pmImg", modal), elSteps = $("#pmSteps", modal), elRepo = $("#pmRepo", modal);
+
+    // rich case-study content keyed by project title
+    const CASE = {
+      "Reveille Bubble Tea": { steps: [
+        ["Problem", "A bubble-tea shop needs one system for customers, cashiers, and managers."],
+        ["Design", "Three role-based interfaces on one shared API and database: a customer kiosk, a cashier terminal, and a manager dashboard."],
+        ["Verify", "Tested ordering, role-based auth, and the dashboard flows end to end, then deployed on Render."],
+        ["Result", "A live POS platform that handles the full ordering-to-management workflow."]
+      ]},
+      "Single-Cycle ARMv8 CPU": { img: "assets/img/armv8_whiteboard.jpeg", steps: [
+        ["Problem", "Build a working ARMv8 processor in Verilog that runs real instructions."],
+        ["Design", "Laid out the single-cycle datapath, fetch, decode, register file, ALU, data memory, write-back, plus the control unit for R-type, load/store, and branch."],
+        ["Verify", "Ran directed instruction tests and traced datapath and control signals to confirm each instruction behaved correctly."],
+        ["Result", "A full single-cycle core that correctly executes the target instruction set."]
+      ]},
+      "LRU Cache Simulator": { img: "assets/img/math_whiteboard.jpeg", steps: [
+        ["Problem", "Measure how cache configuration affects hit and miss rates."],
+        ["Design", "Built a configurable set-associative cache in C++ with an O(1) LRU policy using a hash map plus a doubly linked list."],
+        ["Verify", "Fed memory traces through it and checked hit/miss counts against expected behavior across configurations."],
+        ["Result", "A simulator that reports hit rate for any cache setup, handy for studying memory-hierarchy tradeoffs."]
+      ]},
+      "Digital Combination Lock": { img: "assets/img/alu_whiteboard.jpeg", steps: [
+        ["Problem", "Implement a lock that opens only on the correct code, on real hardware."],
+        ["Design", "Described the lock as a finite state machine in Verilog; onboard switches enter the code and LEDs show locked/unlocked state."],
+        ["Verify", "Loaded it onto the ZYBO Z7-10 and confirmed the compare logic and waveforms on the board."],
+        ["Result", "A hardware lock that unlocks only for the correct sequence."]
+      ]},
+      "Motion Sensor Alarm": { img: "assets/img/breadboard_output.jpeg", steps: [
+        ["Problem", "Detect motion and raise an alarm reliably."],
+        ["Design", "Built an infrared detector feeding a comparator that drives a buzzer when the threshold is crossed."],
+        ["Verify", "Calibrated the threshold and tested across different ambient-light conditions."],
+        ["Result", "A working alarm that triggers on presence with few false alarms."]
+      ]},
+      "Banking Authentication Program": { img: "assets/img/bank_whiteboard.jpeg", steps: [
+        ["Problem", "Authenticate users from the command line with solid error handling."],
+        ["Design", "Wrote a C++ app that verifies credentials and handles bad input gracefully."],
+        ["Verify", "Debugged with gdb breakpoints and step-through execution against automated test scripts."],
+        ["Result", "A reliable auth program that passes its test suite."]
+      ]}
+    };
+
     function open(card) {
       const d = card.dataset;
       const q = s => card.querySelector(s);
       const kind = d.kind || (q(".kind") ? q(".kind").textContent.trim() : "PROJECT");
       const title = d.title || (q("h3") ? q("h3").textContent.replace(/[↗↘\s]+$/, "").trim() : "Project");
       const desc = d.desc || (q(".body p") ? q(".body p").textContent.trim() : "");
-      let tags = [];
-      if (d.tags) tags = d.tags.split("|");
-      else tags = $$(".tags span", card).map(s => s.textContent);
+      let tags = d.tags ? d.tags.split("|") : $$(".tags span", card).map(s => s.textContent);
+      const cs = CASE[title] || {};
       elKind.textContent = kind;
       elTitle.textContent = title;
       elDesc.textContent = desc;
       elMark.textContent = title.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
       elTags.innerHTML = tags.filter(Boolean).map(t => "<span>" + t.trim() + "</span>").join("");
+      // artifact image
+      const img = d.img || cs.img;
+      if (img) { elImg.src = img; elImg.style.display = ""; } else { elImg.style.display = "none"; elImg.removeAttribute("src"); }
+      // process steps
+      const steps = cs.steps || [];
+      elSteps.innerHTML = steps.map((s, i) =>
+        '<div class="pm-step"><span class="pm-sn">' + (i + 1) + '</span><div><b>' + s[0] + '</b><p>' + s[1] + '</p></div></div>').join("");
+      elSteps.style.display = steps.length ? "" : "none";
+      // links
       if (d.url) { elVisit.href = d.url; elVisit.style.display = ""; elVisit.textContent = (d.visit || "Visit the live site") + "  ↗"; }
       else { elVisit.style.display = "none"; }
+      const repo = d.repo || cs.repo;
+      if (repo) { elRepo.href = repo; elRepo.style.display = ""; } else { elRepo.style.display = "none"; }
       modal.classList.add("open"); document.body.style.overflow = "hidden";
+      modal.querySelector(".pm-card").scrollTop = 0;
     }
     function close() { modal.classList.remove("open"); document.body.style.overflow = ""; }
     $$("[data-proj]").forEach(c => {
       c.style.cursor = "pointer";
-      c.addEventListener("click", e => {
-        if (e.target.closest("a")) return; // let real links work
-        open(c);
-      });
+      c.addEventListener("click", e => { if (e.target.closest("a")) return; open(c); });
     });
     $$(".pm-x", modal).forEach(b => b.addEventListener("click", close));
     modal.addEventListener("click", e => { if (e.target === modal) close(); });
     addEventListener("keydown", e => { if (e.key === "Escape") close(); });
   })();
 })();
+
 
 
