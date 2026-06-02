@@ -315,7 +315,7 @@ h1,h2,h3{ font-family:var(--font-display); font-weight:700; line-height:1.05;
   text-transform:uppercase; color:var(--ink-dim); }
 
 /* 3D stage */
-.stage{ position:relative; aspect-ratio:1/1; width:100%; max-width:620px;
+.stage{ position:relative; aspect-ratio:1/1; width:100%; max-width:700px;
   margin-inline:auto; }
 .stage canvas{ width:100%!important; height:100%!important; display:block; }
 .stage .ring{
@@ -1074,3 +1074,68 @@ html[data-theme="light"] .fsm-keys button{ background:rgba(20,32,66,.04); }
 .reel .watch{ position:absolute; left:0; right:0; bottom:16px; text-align:center; font-family:var(--font-mono);
   font-size:.66rem; letter-spacing:.05em; color:var(--steel-2); opacity:0; transform:translateY(6px); transition:.3s var(--ease-out); }
 .reel:hover .watch{ opacity:1; transform:none; }
+
+/* =====================================================================
+   v4 FIXES — light nav/strip, modal layering + scroll-lock, compact popup
+   ===================================================================== */
+/* light-mode: scrolled nav + marquee strip were hardcoded dark */
+html[data-theme="light"] .nav.shrink{ background:rgba(255,255,255,.88); }
+html[data-theme="light"] .strip{ background:rgba(255,255,255,.5); }
+
+/* modal must sit above the nav (z 900) and lock the page */
+#projModal{ z-index:9600; }
+html.modal-open, html.modal-open body{ overflow:hidden !important; }
+
+/* compact case-study popup: fit without internal scrolling */
+#projModal .pm-card{ max-height:92vh; overflow:visible; }
+.pm-hero{ padding:24px 30px 18px; gap:16px; }
+.pm-mark{ width:60px; height:60px; font-size:1.3rem; border-radius:15px; }
+.pm-hero h2{ font-size:clamp(1.3rem,3vw,1.7rem); }
+.pm-img{ max-height:150px; margin-bottom:14px; }
+.pm-body{ padding:0 30px 26px; }
+.pm-steps{ gap:10px; margin:4px 0 16px; }
+.pm-step p{ font-size:.86rem; line-height:1.45; }
+.pm-sn{ width:24px; height:24px; font-size:.72rem; }
+.pm-tags{ margin:12px 0 18px; }
+@media (max-height:760px){
+  .pm-img{ max-height:110px; }
+  .pm-step p{ font-size:.82rem; }
+  .pm-hero{ padding:18px 28px 12px; }
+}
+
+/* ---- more playground toys (binary / 7-seg / adder) ---- */
+.bit-row{ display:flex; gap:8px; flex-wrap:wrap; }
+.bit2{ width:46px; height:58px; border-radius:10px; border:1px solid var(--line-2);
+  background:rgba(150,170,210,.06); color:var(--ink-soft); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:2px; cursor:pointer; transition:.15s; }
+html[data-theme="light"] .bit2{ background:rgba(20,32,66,.04); }
+.bit2 span{ font-family:var(--font-mono); font-size:1.1rem; font-weight:700; line-height:1; }
+.bit2 em{ font-style:normal; font-size:.58rem; color:var(--ink-dim); }
+.bit2:hover{ border-color:var(--steel); }
+.bit2.on{ background:linear-gradient(135deg, var(--steel), var(--steel-2)); color:#04121f; border-color:transparent; }
+.bit2.on em{ color:rgba(4,18,31,.7); }
+.bin-out, .add-out{ font-family:var(--font-mono); margin-top:16px; color:var(--ink-dim);
+  display:flex; gap:26px; flex-wrap:wrap; align-items:baseline; }
+.bin-out b, .add-out b{ color:var(--steel-2); font-size:1.2rem; }
+.seg-wrap{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+.seg{ fill:rgba(127,227,255,.08); transition:.2s; }
+.seg.on{ fill:var(--steel-2); filter:drop-shadow(0 0 7px var(--steel-glow)); }
+.seg-pick{ font-family:var(--font-mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--ink-dim); display:flex; flex-direction:column; gap:6px; }
+.seg-pick select{ font-family:var(--font-mono); font-size:1rem; padding:9px 12px; border-radius:10px;
+  border:1px solid var(--line); background:rgba(150,170,210,.06); color:var(--ink); }
+html[data-theme="light"] .seg-pick select{ background:rgba(20,32,66,.04); }
+.adder{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+.add-side{ display:flex; align-items:center; gap:12px; }
+.add-lbl{ font-family:var(--font-mono); font-size:1.1rem; color:var(--maroon-2); font-weight:700; }
+.add-plus{ font-size:1.6rem; color:var(--ink-dim); }
+.add-out{ flex-direction:column; gap:6px; }
+.add-out .add-eq{ font-size:1.15rem; color:var(--ink); }
+
+/* ---- inline Instagram reel embeds (play on the site, bigger) ---- */
+.reel-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:24px; max-width:880px; margin-inline:auto; }
+@media(max-width:760px){ .reel-grid{ grid-template-columns:1fr; } }
+.reel-embed{ border-radius:18px; overflow:hidden; border:1px solid var(--line);
+  background:#000; box-shadow:var(--shadow-sm); }
+.reel-embed iframe{ width:100%; height:680px; display:block; border:0; }
+@media(max-width:760px){ .reel-embed iframe{ height:640px; } }

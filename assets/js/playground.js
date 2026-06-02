@@ -1,5 +1,5 @@
 /* =====================================================================
-   PLAYGROUND.JS — interactive hardware toys:
+   PLAYGROUND.JS, interactive hardware toys:
    1) LRU set-associative cache simulator
    2) Logic-gate explorer with live truth table
    3) Combination-lock finite state machine
@@ -21,7 +21,7 @@
       seq = (seqIn.value.match(/\d+/g) || []).map(Number);
       ptr = 0; clock = 0; hits = 0; miss = 0;
       cache = Array.from({ length: S }, () => []);
-      curEl.textContent = "—"; hitsEl.textContent = "0"; missEl.textContent = "0"; rateEl.textContent = "0%";
+      curEl.textContent = "·"; hitsEl.textContent = "0"; missEl.textContent = "0"; rateEl.textContent = "0%";
       msgEl.textContent = "Ready, press Step or Run."; msgEl.className = "lru-msg";
       render(-1, -1, null);
       if (timer) { clearInterval(timer); timer = null; }
@@ -34,26 +34,26 @@
           const line = cache[s][w];
           const on = (s === hiSet && (hiWay === -1 || w === hiWay));
           const cls = "lru-cell" + (line ? " filled" : "") + (on && kind ? " " + kind : "");
-          html += '<div class="' + cls + '">' + (line ? "tag " + line.tag : "·") + '</div>';
+          html += '<div class="' + cls + '">' + (line ? "#" + line.addr : "·") + '</div>';
         }
         html += "</div></div>";
       }
       grid.innerHTML = html;
     }
     function step() {
-      if (ptr >= seq.length) { msgEl.textContent = "Sequence complete."; msgEl.className = "lru-msg"; if (timer) { clearInterval(timer); timer = null; } return; }
+      if (ptr >= seq.length) { msgEl.textContent = "Sequence complete. Press Reset to run again."; msgEl.className = "lru-msg"; if (timer) { clearInterval(timer); timer = null; } return; }
       const addr = seq[ptr++]; clock++;
       const idx = addr % S, tag = Math.floor(addr / S);
       const set = cache[idx];
-      curEl.textContent = addr + "  (set " + idx + ", tag " + tag + ")";
+      curEl.textContent = "#" + addr + "  (set " + idx + ", tag " + tag + ")";
       const hit = set.find(l => l.tag === tag);
-      if (hit) { hit.used = clock; hits++; msgEl.textContent = "HIT in set " + idx + " (tag " + tag + ")"; msgEl.className = "lru-msg ok"; render(idx, set.indexOf(hit), "hit"); }
+      if (hit) { hit.used = clock; hits++; msgEl.textContent = "HIT, address #" + addr + " was already in set " + idx; msgEl.className = "lru-msg ok"; render(idx, set.indexOf(hit), "hit"); }
       else {
         miss++;
-        if (set.length < W) { set.push({ tag, used: clock }); msgEl.textContent = "MISS, loaded tag " + tag + " into set " + idx; msgEl.className = "lru-msg bad"; render(idx, set.length - 1, "miss"); }
+        if (set.length < W) { set.push({ tag: tag, addr: addr, used: clock }); msgEl.textContent = "MISS, loaded #" + addr + " into set " + idx; msgEl.className = "lru-msg bad"; render(idx, set.length - 1, "miss"); }
         else { let lru = 0; for (let i = 1; i < set.length; i++) if (set[i].used < set[lru].used) lru = i;
-          const ev = set[lru].tag; set[lru] = { tag, used: clock };
-          msgEl.textContent = "MISS, evicted tag " + ev + ", loaded tag " + tag + " in set " + idx; msgEl.className = "lru-msg bad"; render(idx, lru, "miss"); }
+          const ev = set[lru].addr; set[lru] = { tag: tag, addr: addr, used: clock };
+          msgEl.textContent = "MISS, evicted #" + ev + ", loaded #" + addr + " in set " + idx; msgEl.className = "lru-msg bad"; render(idx, lru, "miss"); }
       }
       hitsEl.textContent = hits; missEl.textContent = miss;
       const total = hits + miss; rateEl.textContent = total ? Math.round(hits / total * 100) + "%" : "0%";
@@ -122,5 +122,53 @@
     function paintNodes() { nodes.forEach((n, i) => n.classList.toggle("active", i === 0)); }
     $("#fsmReset").addEventListener("click", () => { state = 0; paint(); });
     paint();
+  })();
+
+  /* ---------------- 4) BINARY EXPLORER ---------------- */
+  (function binary() {
+    const bits = $("#binBits"); if (!bits) return;
+    const decEl = $("#binDec"), hexEl = $("#binHex");
+    let v = Array(8).fill(0);
+    function render() {
+      bits.innerHTML = v.map((b, i) =>
+        '<button class="bit2' + (b ? " on" : "") + '" data-i="' + i + '"><span>' + b + '</span><em>' + (1 << (7 - i)) + '</em></button>').join("");
+      const n = parseInt(v.join(""), 2);
+      decEl.textContent = n; hexEl.textContent = "0x" + n.toString(16).toUpperCase().padStart(2, "0");
+    }
+    bits.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; v[+b.dataset.i] ^= 1; render(); });
+    render();
+  })();
+
+  /* ---------------- 5) 7-SEGMENT DECODER ---------------- */
+  (function seg() {
+    const wrap = $("#segDisplay"); if (!wrap) return;
+    const sel = $("#segVal");
+    const MAP = { 0:"abcdef",1:"bc",2:"abdeg",3:"abcdg",4:"bcfg",5:"acdfg",6:"acdefg",7:"abc",
+      8:"abcdefg",9:"abcdfg",10:"abcefg",11:"cdefg",12:"adef",13:"bcdeg",14:"adefg",15:"aefg" };
+    function render() {
+      const on = MAP[+sel.value] || "";
+      $$(".seg", wrap).forEach(s => s.classList.toggle("on", on.indexOf(s.dataset.s) >= 0));
+    }
+    sel.addEventListener("change", render); render();
+  })();
+
+  /* ---------------- 6) 4-BIT RIPPLE ADDER ---------------- */
+  (function adder() {
+    const aEl = $("#addA"); if (!aEl) return;
+    const bEl = $("#addB"), out = $("#addOut");
+    let A = Array(4).fill(0), B = Array(4).fill(0);
+    function row(arr, host) {
+      host.innerHTML = arr.map((b, i) => '<button class="bit2' + (b ? " on" : "") + '" data-i="' + i + '"><span>' + b + '</span><em>' + (1 << (3 - i)) + '</em></button>').join("");
+    }
+    function render() {
+      row(A, aEl); row(B, bEl);
+      const a = parseInt(A.join(""), 2), b = parseInt(B.join(""), 2), s = a + b;
+      const sumBits = (s & 15).toString(2).padStart(4, "0"), carry = s > 15 ? 1 : 0;
+      out.innerHTML = '<span class="add-eq">' + a + ' + ' + b + ' = ' + s + '</span>' +
+        '<span class="add-bin">carry <b>' + carry + '</b> · sum <b>' + sumBits + '</b></span>';
+    }
+    aEl.addEventListener("click", e => { const x = e.target.closest("button"); if (!x) return; A[+x.dataset.i] ^= 1; render(); });
+    bEl.addEventListener("click", e => { const x = e.target.closest("button"); if (!x) return; B[+x.dataset.i] ^= 1; render(); });
+    render();
   })();
 })();

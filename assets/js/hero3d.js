@@ -11,7 +11,7 @@
   if (!stage) return;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const stateEl = document.getElementById("cpuState");
-  const LABELS = ["SEALED · CLICK TO OPEN", "DIE & INTERCONNECT · CLICK AGAIN", "TRANSISTOR MESH · CLICK TO CLOSE"];
+  const LABELS = ["SEALED · CLICK TO OPEN", "DIE & INTERCONNECT · CLICK AGAIN", "TRANSISTOR MESH · CLICK AGAIN", "TRANSISTOR DETAIL · CLICK TO CLOSE"];
   const setLabel = s => { if (stateEl) stateEl.innerHTML = LABELS[s]; };
 
   /* ---------- textures ---------- */
@@ -90,7 +90,7 @@
       w = c.width = r.width * devicePixelRatio; h = c.height = r.height * devicePixelRatio;
       c.style.width = r.width + "px"; c.style.height = r.height + "px"; };
     size(); addEventListener("resize", size); setLabel(0);
-    stage.addEventListener("click", () => { state = (state + 1) % 3; setLabel(state); });
+    stage.addEventListener("click", () => { state = (state + 1) % 4; setLabel(state); });
     const rr = (x, y, w2, h2, r) => { ctx.beginPath(); ctx.moveTo(x + r, y);
       ctx.arcTo(x + w2, y, x + w2, y + h2, r); ctx.arcTo(x + w2, y + h2, x, y + h2, r);
       ctx.arcTo(x, y + h2, x, y, r); ctx.arcTo(x, y, x + w2, y, r); ctx.closePath(); };
@@ -132,11 +132,11 @@
         blk(6,78,88,16,"rgba(88,182,255,.25)","FABRIC");
       } else {
         ctx.fillStyle = "#05121a"; rr(-lid/2, -lid/2, lid, lid, 7 * devicePixelRatio); ctx.fill();
-        const G = 14, g2 = lid / G; ctx.fillStyle = "#7fe3ff";
+        const G = state === 3 ? 24 : 14, g2 = lid / G, dot = state === 3 ? 2 : 3; ctx.fillStyle = "#7fe3ff";
         for (let i = 0; i <= G; i++) for (let j = 0; j <= G; j++) {
-          ctx.globalAlpha = .3 + .5 * Math.abs(Math.sin(t * 3 + i * .6 + j * .4));
-          ctx.fillRect(-lid/2 + i*g2 - 1.5, -lid/2 + j*g2 - 1.5, 3, 3); }
-        ctx.globalAlpha = .18; ctx.strokeStyle = "#58b6ff"; ctx.lineWidth = devicePixelRatio*.5;
+          ctx.globalAlpha = .3 + .5 * Math.abs(Math.sin(t * (state === 3 ? 5 : 3) + i * .6 + j * .4));
+          ctx.fillRect(-lid/2 + i*g2 - dot/2, -lid/2 + j*g2 - dot/2, dot, dot); }
+        ctx.globalAlpha = state === 3 ? .26 : .18; ctx.strokeStyle = "#58b6ff"; ctx.lineWidth = devicePixelRatio*.5;
         for (let i = 0; i <= G; i++) { ctx.beginPath(); ctx.moveTo(-lid/2+i*g2,-lid/2); ctx.lineTo(-lid/2+i*g2,lid/2); ctx.stroke();
           ctx.beginPath(); ctx.moveTo(-lid/2,-lid/2+i*g2); ctx.lineTo(lid/2,-lid/2+i*g2); ctx.stroke(); }
         ctx.globalAlpha = 1;
@@ -219,6 +219,20 @@
     const txLines = new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: 0x58b6ff, transparent: true, opacity: 0 }));
     cpu.add(txLines);
 
+    // dense "transistor detail" layer (state 3): finer lattice + flowing connections
+    const tx2Mat = new THREE.MeshStandardMaterial({ color: 0x9fe9ff, emissive: 0x3ad0ff, emissiveIntensity: 1.4, transparent: true, opacity: 0 });
+    const G2 = 26, gs2 = span / (G2 - 1);
+    const tx2 = new THREE.InstancedMesh(new THREE.BoxGeometry(0.022, 0.022, 0.022), tx2Mat, G2 * G2);
+    const mm2 = new THREE.Matrix4(); let k2 = 0;
+    for (let i = 0; i < G2; i++) for (let j = 0; j < G2; j++) { mm2.makeTranslation(o + i * gs2, 0.38, o + j * gs2); tx2.setMatrixAt(k2++, mm2); }
+    tx2.instanceMatrix.needsUpdate = true; cpu.add(tx2);
+    const lp2 = [];
+    for (let i = 0; i < G2; i++) { lp2.push(o + i * gs2, 0.38, o, o + i * gs2, 0.38, -o);
+      lp2.push(o, 0.38, o + i * gs2, -o, 0.38, o + i * gs2); }
+    const lg2 = new THREE.BufferGeometry(); lg2.setAttribute("position", new THREE.Float32BufferAttribute(lp2, 3));
+    const tx2Lines = new THREE.LineSegments(lg2, new THREE.LineBasicMaterial({ color: 0x7fe3ff, transparent: true, opacity: 0 }));
+    cpu.add(tx2Lines);
+
     // heat-spreader rim + lid
     const rimMat = new THREE.MeshStandardMaterial({ color: 0x3a3f49, metalness: 0.95, roughness: 0.32, transparent: true, opacity: 1 });
     const rim = new THREE.Mesh(new THREE.BoxGeometry(2.45, 0.08, 2.45), rimMat); rim.position.y = 0.17; cpu.add(rim);
@@ -258,13 +272,14 @@
     cpu.rotation.x = 0.17;
 
     let state = 0; setLabel(0);
-    const tgt = { lidY: 0.3, lidO: 1, dieO: 0, txO: 0 };
+    const tgt = { lidY: 0.3, lidO: 1, dieO: 0, txO: 0, tx2O: 0 };
     function applyTargets() {
-      if (state === 0) { tgt.lidY = 0.3; tgt.lidO = 1; tgt.dieO = 0; tgt.txO = 0; }
-      else if (state === 1) { tgt.lidY = 1.9; tgt.lidO = 0.1; tgt.dieO = 1; tgt.txO = 0; }
-      else { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.28; tgt.txO = 1; }
+      if (state === 0) { tgt.lidY = 0.3; tgt.lidO = 1; tgt.dieO = 0; tgt.txO = 0; tgt.tx2O = 0; }
+      else if (state === 1) { tgt.lidY = 1.9; tgt.lidO = 0.1; tgt.dieO = 1; tgt.txO = 0; tgt.tx2O = 0; }
+      else if (state === 2) { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.28; tgt.txO = 1; tgt.tx2O = 0; }
+      else { tgt.lidY = 2.5; tgt.lidO = 0; tgt.dieO = 0.16; tgt.txO = 0.22; tgt.tx2O = 1; }
     }
-    stage.addEventListener("click", () => { state = (state + 1) % 3; setLabel(state); applyTargets(); });
+    stage.addEventListener("click", () => { state = (state + 1) % 4; setLabel(state); applyTargets(); });
     stage.style.cursor = "pointer";
 
     const resize = () => { const b = stage.getBoundingClientRect();
@@ -291,6 +306,10 @@
       txLines.material.opacity += (tgt.txO * 0.55 - txLines.material.opacity) * 0.08;
       tx.visible = txMat.opacity > 0.02; txLines.visible = tx.visible;
       if (tx.visible) txMat.emissiveIntensity = 0.7 + Math.sin(t * 3.2) * 0.6;
+      tx2Mat.opacity += (tgt.tx2O - tx2Mat.opacity) * 0.08;
+      tx2Lines.material.opacity += (tgt.tx2O * 0.65 - tx2Lines.material.opacity) * 0.08;
+      tx2.visible = tx2Mat.opacity > 0.02; tx2Lines.visible = tx2.visible;
+      if (tx2.visible) tx2Mat.emissiveIntensity = 1.0 + Math.sin(t * 5.5) * 0.9;
       renderer.render(scene, camera);
     })();
   }

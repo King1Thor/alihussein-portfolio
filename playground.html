@@ -127,6 +127,55 @@
       </div>
     </div>
   </section>
+
+  <!-- MORE TOYS -->
+  <section style="padding-top:14px;">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow">// NUMBERS &amp; DECODERS</div>
+        <h2 class="h-sec">More logic toys</h2>
+        <p class="lead">Flip bits and watch the numbers, the seven-segment display, and the adder update in real time.</p>
+      </div>
+      <div class="lab-two">
+        <div class="glass lab reveal">
+          <div class="lab-cap">Binary explorer &middot; 8-bit</div>
+          <div class="bit-row" id="binBits"></div>
+          <div class="bin-out">DEC <b id="binDec">0</b><span>HEX <b id="binHex">0x00</b></span></div>
+        </div>
+        <div class="glass lab reveal d1">
+          <div class="lab-cap">7-segment decoder</div>
+          <div class="seg-wrap">
+            <svg id="segDisplay" viewBox="0 0 120 200" width="96">
+              <polygon class="seg" data-s="a" points="35,20 85,20 92,27 85,34 35,34 28,27"/>
+              <polygon class="seg" data-s="f" points="25,30 32,37 32,90 25,97 18,90 18,37"/>
+              <polygon class="seg" data-s="b" points="95,30 102,37 102,90 95,97 88,90 88,37"/>
+              <polygon class="seg" data-s="g" points="35,93 85,93 92,100 85,107 35,107 28,100"/>
+              <polygon class="seg" data-s="e" points="25,103 32,110 32,163 25,170 18,163 18,110"/>
+              <polygon class="seg" data-s="c" points="95,103 102,110 102,163 95,170 88,163 88,110"/>
+              <polygon class="seg" data-s="d" points="35,166 85,166 92,173 85,180 35,180 28,173"/>
+            </svg>
+            <label class="seg-pick">Show digit
+              <select id="segVal">
+                <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+                <option value="8">8</option><option value="9">9</option><option value="10">A</option><option value="11">b</option>
+                <option value="12">C</option><option value="13">d</option><option value="14">E</option><option value="15">F</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="glass lab reveal" style="margin-top:22px;">
+        <div class="lab-cap">4-bit ripple-carry adder</div>
+        <div class="adder">
+          <div class="add-side"><span class="add-lbl">A</span><div class="bit-row" id="addA"></div></div>
+          <div class="add-plus">+</div>
+          <div class="add-side"><span class="add-lbl">B</span><div class="bit-row" id="addB"></div></div>
+        </div>
+        <div class="add-out" id="addOut"></div>
+      </div>
+    </div>
+  </section>
   <footer class="site">
     <div class="wrap">
       <div class="foot-grid">

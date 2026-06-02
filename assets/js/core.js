@@ -102,8 +102,8 @@
     function frame() {
       ctx.clearRect(0, 0, w, h);
       const light = isLight();
-      const dotCol = light ? "rgba(90,40,55,.55)" : "rgba(127,227,255,.55)";
-      const lineRGB = light ? "70,90,140" : "120,150,210";
+      const dotCol = light ? "rgba(55,70,120,.8)" : "rgba(127,227,255,.55)";
+      const lineRGB = light ? "60,80,140" : "120,150,210";
       for (const p of pts) {
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > w) p.vx *= -1;
@@ -120,7 +120,7 @@
           const a = pts[i], b = pts[j];
           const dist = Math.hypot(a.x - b.x, a.y - b.y);
           if (dist < LINK) {
-            const o = (1 - dist / LINK) * (light ? .45 : .35);
+            const o = (1 - dist / LINK) * (light ? .7 : .35);
             ctx.strokeStyle = `rgba(${lineRGB},${o})`;
             ctx.lineWidth = devicePixelRatio * .6;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
@@ -145,6 +145,7 @@
     }
     addEventListener("wheel", e => {
       if (e.ctrlKey) return;
+      if (document.documentElement.classList.contains("modal-open")) return;
       const open = $(".nav-links.open");
       if (open) return;
       e.preventDefault();
@@ -372,7 +373,7 @@
     const modal = $("#projModal");
     if (!modal) return;
     const elKind = $("#pmKind", modal), elTitle = $("#pmTitle", modal),
-          elDesc = $("#pmDesc", modal), elTags = $("#pmTags", modal),
+          elTags = $("#pmTags", modal),
           elVisit = $("#pmVisit", modal), elMark = $("#pmMark", modal),
           elImg = $("#pmImg", modal), elSteps = $("#pmSteps", modal), elRepo = $("#pmRepo", modal);
 
@@ -421,31 +422,31 @@
       const q = s => card.querySelector(s);
       const kind = d.kind || (q(".kind") ? q(".kind").textContent.trim() : "PROJECT");
       const title = d.title || (q("h3") ? q("h3").textContent.replace(/[↗↘\s]+$/, "").trim() : "Project");
-      const desc = d.desc || (q(".body p") ? q(".body p").textContent.trim() : "");
       let tags = d.tags ? d.tags.split("|") : $$(".tags span", card).map(s => s.textContent);
       const cs = CASE[title] || {};
       elKind.textContent = kind;
       elTitle.textContent = title;
-      elDesc.textContent = desc;
       elMark.textContent = title.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
       elTags.innerHTML = tags.filter(Boolean).map(t => "<span>" + t.trim() + "</span>").join("");
-      // artifact image
       const img = d.img || cs.img;
       if (img) { elImg.src = img; elImg.style.display = ""; } else { elImg.style.display = "none"; elImg.removeAttribute("src"); }
-      // process steps
       const steps = cs.steps || [];
       elSteps.innerHTML = steps.map((s, i) =>
         '<div class="pm-step"><span class="pm-sn">' + (i + 1) + '</span><div><b>' + s[0] + '</b><p>' + s[1] + '</p></div></div>').join("");
       elSteps.style.display = steps.length ? "" : "none";
-      // links
       if (d.url) { elVisit.href = d.url; elVisit.style.display = ""; elVisit.textContent = (d.visit || "Visit the live site") + "  ↗"; }
       else { elVisit.style.display = "none"; }
       const repo = d.repo || cs.repo;
       if (repo) { elRepo.href = repo; elRepo.style.display = ""; } else { elRepo.style.display = "none"; }
-      modal.classList.add("open"); document.body.style.overflow = "hidden";
-      modal.querySelector(".pm-card").scrollTop = 0;
+      modal.classList.add("open");
+      document.documentElement.classList.add("modal-open");
+      document.body.style.overflow = "hidden";
     }
-    function close() { modal.classList.remove("open"); document.body.style.overflow = ""; }
+    function close() {
+      modal.classList.remove("open");
+      document.documentElement.classList.remove("modal-open");
+      document.body.style.overflow = "";
+    }
     $$("[data-proj]").forEach(c => {
       c.style.cursor = "pointer";
       c.addEventListener("click", e => { if (e.target.closest("a")) return; open(c); });
