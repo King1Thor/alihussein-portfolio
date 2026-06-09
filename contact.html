@@ -37,6 +37,7 @@
       <a href="designer.html">Creative</a>
       <a class="nav-cta" href="contact.html">Contact</a>
     </div>
+    <div id="authSlot" class="auth-slot"></div>
     <button class="theme-toggle" aria-label="Toggle light or dark mode" type="button">
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
@@ -99,6 +100,31 @@
     </div>
   </section>
 
+  <section style="padding-top:6px;">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow">// GUESTBOOK</div>
+        <h2 class="h-sec">Leave your mark</h2>
+        <p class="lead">Signed-in visitors can drop a quick note or endorsement. Notes appear here once I approve them.</p>
+      </div>
+      <div class="glass reveal" style="padding:26px; border-radius:var(--radius-lg);">
+        <div id="gbCompose" style="display:none; margin-bottom:20px;">
+          <div class="field" style="margin-bottom:10px;">
+            <textarea id="gbText" placeholder="Say hi, leave feedback, or an endorsement..."></textarea>
+          </div>
+          <div style="display:flex; gap:14px; align-items:center;">
+            <button class="btn btn-primary" id="gbSend" type="button">Post note &#8594;</button>
+            <span id="gbStatus" class="form-status"></span>
+          </div>
+        </div>
+        <div id="gbSignin" style="display:none; color:var(--ink-dim); font-size:.9rem; margin-bottom:18px;">
+          Sign in with Google (top-right) to leave a note.
+        </div>
+        <div id="gbList"></div>
+      </div>
+    </div>
+  </section>
+
   <section style="padding-top:14px;">
     <div class="wrap">
       <div class="glass cta-band reveal">
@@ -153,47 +179,65 @@
   </div>
   <script src="assets/js/core.js"></script>
   <script src="assets/js/assistant.js"></script>
+  <script src="assets/js/app.js"></script>
   <script>
   (function(){
-    /* === To make this form SEND to your inbox, paste your free Web3Forms ===
-       access key below (get one at https://web3forms.com, it emails you a key).
-       Until then, the button falls back to opening your email app. */
-    var ACCESS_KEY = "";
-
     var b=document.getElementById('cSend'); if(!b) return;
     var status=document.getElementById('cStatus');
     function val(id){ var e=document.getElementById(id); return e?(e.value||'').trim():''; }
     function setStatus(msg, cls){ if(status){ status.textContent=msg; status.className='form-status '+(cls||''); } }
-
+    function mailtoFallback(n,e,m){
+      var subj=n?('Portfolio contact from '+n):'Portfolio contact';
+      var body=m+(e?('\n\nfrom '+n+' ('+e+')'):('\n\nfrom '+n));
+      window.location.href='mailto:ali.hussein24@tamu.edu?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    }
     b.addEventListener('click', function(){
       var n=val('cName'), e=val('cEmail'), m=val('cMsg');
       if(document.getElementById('cHP') && document.getElementById('cHP').value) return; /* honeypot */
       if(!m){ setStatus('Please write a message first.', 'bad'); return; }
-
-      if(ACCESS_KEY){
-        setStatus('Sending…', '');
-        b.disabled = true;
-        fetch('https://api.web3forms.com/submit', {
-          method:'POST', headers:{'Content-Type':'application/json', 'Accept':'application/json'},
-          body: JSON.stringify({
-            access_key: ACCESS_KEY,
-            subject: n ? ('Portfolio message from '+n) : 'Portfolio message',
-            name: n || 'Anonymous', email: e || 'no-reply@alihussein.tech', message: m
-          })
-        }).then(function(r){ return r.json(); }).then(function(d){
-          b.disabled = false;
-          if(d.success){ setStatus('Thanks, your message was sent.', 'ok');
-            ['cName','cEmail','cMsg'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; }); }
-          else { setStatus('Something went wrong. Email me directly instead.', 'bad'); }
-        }).catch(function(){ b.disabled = false; setStatus('Network error. Email me directly instead.', 'bad'); });
-        return;
-      }
-
-      /* fallback: open the visitor's email app */
-      var subj=n?('Portfolio contact from '+n):'Portfolio contact';
-      var body=m+(e?('\n\nfrom '+n+' ('+e+')'):('\n\nfrom '+n));
-      window.location.href='mailto:ali.hussein24@tamu.edu?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+      setStatus('Sending…', ''); b.disabled = true;
+      fetch('/api/messages', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ name:n, email:e, message:m })
+      }).then(function(r){ if(!r.ok) throw new Error('bad'); return r.json(); }).then(function(){
+        b.disabled = false; setStatus('Thanks, your message was sent.', 'ok');
+        ['cName','cEmail','cMsg'].forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
+      }).catch(function(){
+        /* backend not live yet -> open the visitor's email app instead */
+        b.disabled = false; setStatus('Opening your email app…', '');
+        mailtoFallback(n,e,m);
+      });
     });
+
+    /* ---- guestbook ---- */
+    (function(){
+      var list=document.getElementById('gbList'); if(!list) return;
+      function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+      function load(){
+        fetch('/api/guestbook').then(function(r){return r.json();}).then(function(d){
+          var rows=(d.entries||[]);
+          list.innerHTML = rows.length ? rows.map(function(g){
+            return '<div class="gb-entry"><b>'+esc(g.visitor_name||'Visitor')+'</b><p>'+esc(g.body)+'</p></div>';
+          }).join('') : '<p style="color:var(--ink-dim);font-size:.9rem;">No notes yet. Be the first.</p>';
+        }).catch(function(){ list.innerHTML=''; });
+      }
+      fetch('/api/auth/me').then(function(r){return r.json();}).then(function(d){
+        if(d&&d.user){ document.getElementById('gbCompose').style.display=''; }
+        else { document.getElementById('gbSignin').style.display=''; }
+      }).catch(function(){});
+      var send=document.getElementById('gbSend');
+      if(send) send.addEventListener('click', function(){
+        var ta=document.getElementById('gbText'); var st=document.getElementById('gbStatus');
+        var body=(ta.value||'').trim();
+        if(!body){ st.textContent='Write something first.'; st.className='form-status bad'; return; }
+        send.disabled=true; st.textContent='Posting…'; st.className='form-status';
+        fetch('/api/guestbook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({body:body})})
+          .then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(){
+            send.disabled=false; ta.value=''; st.textContent='Thanks! Your note is pending approval.'; st.className='form-status ok';
+          }).catch(function(){ send.disabled=false; st.textContent='Could not post (are you signed in?).'; st.className='form-status bad'; });
+      });
+      load();
+    })();
   })();
   </script>
 </body>

@@ -51,6 +51,7 @@
       <a href="designer.html">Creative</a>
       <a class="nav-cta" href="contact.html">Contact</a>
     </div>
+    <div id="authSlot" class="auth-slot"></div>
     <button class="theme-toggle" aria-label="Toggle light or dark mode" type="button">
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
@@ -220,8 +221,7 @@
           data-tags="Frontend|REST API|Database|Auth & Roles|Deployed on Render"
           data-url="https://project3-team25-m13k.onrender.com/"
           data-visit="Visit the live restaurant site">
-          <div class="ph" style="background:radial-gradient(120% 90% at 80% -10%, rgba(181,29,53,.32), transparent 55%), linear-gradient(160deg,#15171f,#0c0e15); display:grid; place-items:center;">
-            <span style="font-family:var(--font-display); font-weight:800; font-size:2.6rem; color:#fff; letter-spacing:.06em; text-shadow:0 10px 30px rgba(181,29,53,.5);">RB</span>
+          <div class="ph"><img src="assets/img/projects/rbt-kiosk.png" alt="Reveille Bubble Tea customer ordering kiosk">
             <div class="badge"><span class="stat"><span class="d"></span> LIVE SITE</span></div>
             <span class="num">01</span>
           </div>
@@ -242,7 +242,7 @@
           data-desc="A complete single-cycle ARMv8 datapath covering fetch, decode, register file, ALU, memory, and write-back, with control-unit logic for R-type, load/store, and branch instructions. Validated through directed instruction testing and datapath/control tracing."
           data-tags="ARMv8 ISA|Datapath|Control Unit|Verilog">
           <div class="ph">
-            <img src="assets/img/armv8_whiteboard.jpeg" alt="ARMv8 datapath design">
+            <img src="assets/img/projects/armv8-datapath.png" alt="Single-cycle ARMv8 datapath and control unit">
             <div class="badge"><span class="stat r"><span class="d"></span> TEAM PROJECT</span></div>
             <span class="num">02</span>
           </div>
@@ -316,6 +316,8 @@
       </div>
       <div class="pm-body">
         <img class="pm-img" id="pmImg" alt="Project artifact">
+        <video class="pm-vid" id="pmVid" controls playsinline preload="none" style="display:none"></video>
+        <div class="pm-thumbs" id="pmThumbs"></div>
         <div class="pm-steps" id="pmSteps"></div>
         <div class="pm-tags" id="pmTags"></div>
         <div class="pm-actions">
@@ -386,5 +388,6 @@
   <script src="assets/js/core.js"></script>
   <script src="assets/js/hero3d.js"></script>
   <script src="assets/js/assistant.js"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>

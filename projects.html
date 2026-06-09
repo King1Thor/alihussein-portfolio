@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Projects · Ali Hussein</title>
-  <meta name="description" content="Full-stack and hardware projects by Ali Hussein: Reveille Bubble Tea POS, single-cycle ARMv8 CPU, LRU cache simulator, FPGA combination lock, motion sensor alarm, and a C++ banking program.">
+  <meta name="description" content="Full-stack and hardware projects by Ali Hussein: Reveille Bubble Tea POS, single-cycle ARMv8 CPU, LRU cache simulator, FPGA combination lock, motion sensor alarm, a two-stage MOSFET amplifier, an FPGA traffic-light controller, a breadboard 4-bit ALU, and a multi-threaded C++ banking system.">
   <link rel="icon" href="assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,6 +37,7 @@
       <a href="designer.html">Creative</a>
       <a class="nav-cta" href="contact.html">Contact</a>
     </div>
+    <div id="authSlot" class="auth-slot"></div>
     <button class="theme-toggle" aria-label="Toggle light or dark mode" type="button">
       <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
       <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6 19 19M19 5l-1.4 1.4M6.4 17.6 5 19"/></svg>
@@ -67,10 +68,8 @@
           data-tags="Frontend|REST API|Relational Database|Role-Based Auth|OAuth Login|Deployed on Render"
           data-url="https://project3-team25-m13k.onrender.com/"
           data-visit="Visit the live restaurant site">
-          <div class="ph" style="background:radial-gradient(120% 90% at 80% -10%, rgba(181,29,53,.32), transparent 55%), linear-gradient(160deg,#15171f,#0c0e15); display:grid; place-items:center; min-height:200px;">
-            <span style="font-family:var(--font-display); font-weight:800; font-size:2.8rem; color:#fff; letter-spacing:.06em; text-shadow:0 10px 30px rgba(181,29,53,.5);">RB</span>
-            <div class="badge"><span class="stat"><span class="d"></span> LIVE SITE</span></div><span class="num">01</span>
-          </div>
+          <div class="ph"><img src="assets/img/projects/rbt-kiosk.png" alt="Reveille Bubble Tea customer ordering kiosk">
+            <div class="badge"><span class="stat"><span class="d"></span> LIVE SITE</span></div><span class="num">01</span></div>
           <div class="body">
             <div class="kind">Full-Stack &middot; Team Project</div>
             <h3>Reveille Bubble Tea <span class="arrow">&#8599;</span></h3>
@@ -97,18 +96,18 @@
       <div class="proj-grid">
 
         <article class="glass proj reveal" data-proj>
-          <div class="ph"><img src="assets/img/armv8_whiteboard.jpeg" alt="ARMv8 datapath">
+          <div class="ph"><img src="assets/img/projects/armv8-datapath.png" alt="Single-cycle ARMv8 datapath and control unit">
             <div class="badge"><span class="stat r"><span class="d"></span> TEAM PROJECT</span></div><span class="num">01</span></div>
           <div class="body">
-            <div class="kind">Computer Architecture</div>
+            <div class="kind">Computer Architecture &middot; ECEN 350</div>
             <h3>Single-Cycle ARMv8 CPU <span class="arrow">&#8599;</span></h3>
-            <p>Contributed to the design and integration of a single-cycle ARMv8 datapath spanning fetch, decode, register file, ALU, memory, and write-back, plus control-unit logic for R-type, load/store, and branch behavior, validated through directed instruction testing.</p>
+            <p>A single-cycle ARMv8 processor in Verilog: fetch, decode, register file, ALU, data memory, and write-back, with a control unit decoding the 11-bit opcode. Extended with MOVZ to build full 64-bit constants, then verified with a self-checking testbench and run on FPGA hardware.</p>
             <div class="reveal-more">
-              <div class="tags"><span>ARMv8 ISA</span><span>Control Unit</span><span>Datapath Tracing</span><span>Verilog</span></div>
+              <div class="tags"><span>ARMv8 ISA</span><span>Control Unit</span><span>Sign Extender</span><span>MOVZ</span><span>Verilog</span></div>
               <div class="metrics">
-                <div class="m"><div class="v">5-stage</div><div class="l">Datapath</div></div>
-                <div class="m"><div class="v">R/D/B</div><div class="l">Instr. Types</div></div>
-                <div class="m"><div class="v">Directed</div><div class="l">Testing</div></div>
+                <div class="m"><div class="v">Single-Cycle</div><div class="l">Datapath</div></div>
+                <div class="m"><div class="v">R/I/D/CB/B</div><div class="l">Instr. Types</div></div>
+                <div class="m"><div class="v">All Passed</div><div class="l">Self-Tests</div></div>
               </div>
             </div>
           </div>
@@ -169,18 +168,72 @@
         </article>
 
         <article class="glass proj reveal" data-proj>
-          <div class="ph"><img src="assets/img/bank_whiteboard.jpeg" alt="C++ banking program">
-            <div class="badge"><span class="stat"><span class="d"></span> VERIFIED</span></div><span class="num">05</span></div>
+          <div class="ph"><img src="assets/img/projects/banking-architecture.svg" alt="Multi-threaded banking system architecture">
+            <div class="badge"><span class="stat"><span class="d"></span> CONCURRENT</span></div><span class="num">05</span></div>
           <div class="body">
-            <div class="kind">Low-Level Software &middot; C++</div>
-            <h3>Banking Authentication Program <span class="arrow">&#8599;</span></h3>
-            <p>A C++ command-line banking authentication program supporting credential verification and robust input error handling. Debugged defects using gdb breakpoints and step-through execution against automated test scripts.</p>
+            <div class="kind">Systems Programming &middot; Networking &middot; C++</div>
+            <h3>Multi-Threaded Banking System <span class="arrow">&#8599;</span></h3>
+            <p>A C++ client/server banking system over TCP sockets on Linux. The server accepts many clients at once and dispatches each request to a thread pool of persistent workers pulling from a task queue, with mutex-guarded shared account state and modular networking, finance, logging, and signal-handling layers.</p>
             <div class="reveal-more">
-              <div class="tags"><span>C++</span><span>gdb</span><span>Input Validation</span><span>Test Scripts</span></div>
+              <div class="tags"><span>C++</span><span>TCP Sockets</span><span>Thread Pool</span><span>Mutexes</span><span>Linux</span></div>
               <div class="metrics">
-                <div class="m"><div class="v">CLI</div><div class="l">Interface</div></div>
-                <div class="m"><div class="v">gdb</div><div class="l">Debugging</div></div>
-                <div class="m"><div class="v">Automated</div><div class="l">Tests</div></div>
+                <div class="m"><div class="v">Thread Pool</div><div class="l">Concurrency</div></div>
+                <div class="m"><div class="v">TCP/IP</div><div class="l">Sockets</div></div>
+                <div class="m"><div class="v">Mutex-Safe</div><div class="l">Shared State</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal d1" data-proj>
+          <div class="ph"><img src="assets/img/projects/amp-schematic.png" alt="Two-stage MOSFET amplifier schematic">
+            <div class="badge"><span class="stat"><span class="d"></span> BUILT &amp; MEASURED</span></div><span class="num">06</span></div>
+          <div class="body">
+            <div class="kind">Analog Electronics &middot; ECEN 325</div>
+            <h3>Two-Stage MOSFET Amplifier <span class="arrow">&#8599;</span></h3>
+            <p>Designed, simulated, and built a two-stage MOSFET amplifier on a &plusmn;5 V supply: a CD4007P common-source gain stage into a 2N7000G source-follower with a current-source bias. Hand-calculated the full bias, tuned it in Multisim, then verified it on hardware against gain, input-resistance, swing, and THD specs.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>MOSFET</span><span>Analog Design</span><span>Biasing</span><span>Multisim</span><span>Oscilloscope</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">~40 V/V</div><div class="l">Gain</div></div>
+                <div class="m"><div class="v">3.7%</div><div class="l">THD</div></div>
+                <div class="m"><div class="v">21 k&#8486;</div><div class="l">Input R</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal" data-proj>
+          <div class="ph"><img src="assets/img/projects/tlc-zybo.jpg" alt="Traffic light controller on the ZYBO Z7-10 FPGA">
+            <div class="badge"><span class="stat"><span class="d"></span> VERIFIED ON FPGA</span></div><span class="num">07</span></div>
+          <div class="body">
+            <div class="kind">Digital Logic &middot; FPGA &middot; ECEN 248</div>
+            <h3>Traffic Light Controller <span class="arrow">&#8599;</span></h3>
+            <p>A sensor-aware traffic-light controller for a highway/farm-road intersection, built as a 6-state Moore FSM in Verilog. A 31-bit counter at 50 MHz times each phase, a farm-road sensor shortens the highway green, and the design was simulated then run on the ZYBO Z7-10.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>Verilog</span><span>FSM</span><span>FPGA</span><span>ZYBO Z7</span><span>Sequential Logic</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">6-State FSM</div><div class="l">Moore</div></div>
+                <div class="m"><div class="v">50 MHz</div><div class="l">Clock</div></div>
+                <div class="m"><div class="v">ZYBO Z7</div><div class="l">FPGA</div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="glass proj reveal d1" data-proj>
+          <div class="ph"><img src="assets/img/projects/alu-breadboard.jpg" alt="4-bit ALU built on a breadboard">
+            <div class="badge"><span class="stat"><span class="d"></span> BUILT &amp; TESTED</span></div><span class="num">08</span></div>
+          <div class="body">
+            <div class="kind">Digital Logic &middot; Breadboard &middot; ECEN 248</div>
+            <h3>4-Bit ALU <span class="arrow">&#8599;</span></h3>
+            <p>A 4-bit arithmetic logic unit built from discrete 74-series ICs on a breadboard: a ripple-carry adder with XOR gates for add/subtract (two's complement), AND gates for bitwise AND, and a 2:1 MUX to select the operation. Verified against add, subtract, and AND test cases with LED outputs.</p>
+            <div class="reveal-more">
+              <div class="tags"><span>Digital Logic</span><span>74xx ICs</span><span>Ripple-Carry Adder</span><span>MUX</span><span>Two's Complement</span></div>
+              <div class="metrics">
+                <div class="m"><div class="v">4-bit</div><div class="l">Operands</div></div>
+                <div class="m"><div class="v">ADD/SUB/AND</div><div class="l">Operations</div></div>
+                <div class="m"><div class="v">74xx ICs</div><div class="l">Hardware</div></div>
               </div>
             </div>
           </div>
@@ -236,6 +289,8 @@
       </div>
       <div class="pm-body">
         <img class="pm-img" id="pmImg" alt="Project artifact">
+        <video class="pm-vid" id="pmVid" controls playsinline preload="none" style="display:none"></video>
+        <div class="pm-thumbs" id="pmThumbs"></div>
         <div class="pm-steps" id="pmSteps"></div>
         <div class="pm-tags" id="pmTags"></div>
         <div class="pm-actions">
@@ -286,5 +341,6 @@
   </div>
   <script src="assets/js/core.js"></script>
   <script src="assets/js/assistant.js"></script>
+  <script src="assets/js/app.js"></script>
 </body>
 </html>

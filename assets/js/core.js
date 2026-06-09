@@ -375,22 +375,38 @@
     const elKind = $("#pmKind", modal), elTitle = $("#pmTitle", modal),
           elTags = $("#pmTags", modal),
           elVisit = $("#pmVisit", modal), elMark = $("#pmMark", modal),
-          elImg = $("#pmImg", modal), elSteps = $("#pmSteps", modal), elRepo = $("#pmRepo", modal);
+          elImg = $("#pmImg", modal), elVid = $("#pmVid", modal), elThumbs = $("#pmThumbs", modal), elSteps = $("#pmSteps", modal), elRepo = $("#pmRepo", modal);
 
     // rich case-study content keyed by project title
     const CASE = {
-      "Reveille Bubble Tea": { steps: [
+      "Reveille Bubble Tea": {
+        repo: "https://github.com/CSCE-331-Spring-2026-900-908/project3-team25",
+        gallery: [
+          { src: "assets/img/projects/rbt-kiosk.png", cap: "Customer ordering kiosk" },
+          { src: "assets/img/projects/rbt-pos.png", cap: "Cashier POS terminal" },
+          { src: "assets/img/projects/rbt-dashboard.png", cap: "Manager analytics dashboard" },
+          { src: "assets/img/projects/rbt-landing.png", cap: "Role-based launcher" }
+        ],
+        steps: [
         ["Problem", "A bubble-tea shop needs one system for customers, cashiers, and managers."],
         ["Design", "Three role-based interfaces on one shared API and database: a customer kiosk, a cashier terminal, and a manager dashboard."],
         ["Verify", "Tested ordering, role-based auth, and the dashboard flows end to end, then deployed on Render."],
         ["Result", "A live POS platform that handles the full ordering-to-management workflow."]
       ]},
-      "Single-Cycle ARMv8 CPU": { steps: [
-        ["Problem", "Build a working ARMv8 processor in Verilog that runs real instructions."],
-        ["Design", "Laid out the single-cycle datapath, fetch, decode, register file, ALU, data memory, write-back, plus the control unit for R-type, load/store, and branch."],
-        ["Verify", "Ran directed instruction tests and traced datapath and control signals to confirm each instruction behaved correctly."],
-        ["Result", "A full single-cycle core that correctly executes the target instruction set."]
-      ]},
+      "Single-Cycle ARMv8 CPU": {
+        repo: "https://github.com/King1Thor/Hardware-Project",
+        gallery: [
+          { src: "assets/img/projects/armv8-datapath.png", cap: "Single-cycle datapath + control unit" },
+          { src: "assets/img/projects/armv8-results.jpeg", cap: "All tests passed (run on Raspberry Pi)" },
+          { src: "assets/img/armv8_whiteboard.jpeg", cap: "Hand-compiling C to ARMv8 assembly" }
+        ],
+        steps: [
+          ["Problem", "Build a working single-cycle ARMv8 processor in Verilog that runs the core instruction set — R-type (AND/ORR/ADD/SUB), I-type, load/store, and branches (CBZ, B) — then extend it to support MOVZ for building full 64-bit constants."],
+          ["Design", "Built the main control unit decoding the 11-bit opcode with casez wildcards, driving every control line, and integrated the full datapath: PC + instruction memory, register file, sign extender, ALU, data memory, the write-back mux, and next-PC logic. Added MOVZ via a MovZ flag that zero-extends the 16-bit immediate and shifts it to position hw*16, forwarded straight to the register file."],
+          ["Verify", "Wrote a self-checking control testbench that exhaustively expands the wildcard opcodes (I-type, MOVZ, all CBZ and B encodings) and fires random unsupported opcodes to confirm a safe all-zero default. Simulated the whole core with iverilog + GTKWave and ran it on a Raspberry Pi."],
+          ["Result", "All tests passed. A MOVZ+ORR program builds the constant 0x123456789ABCDEF0 in a register, stores it to data memory, and loads it back — verifying the MOVZ extension and the full single-cycle datapath end to end."]
+        ]
+      },
       "LRU Cache Simulator": { steps: [
         ["Problem", "Measure how cache configuration affects hit and miss rates."],
         ["Design", "Built a configurable set-associative cache in C++ with an O(1) LRU policy using a hash map plus a doubly linked list."],
@@ -409,12 +425,59 @@
         ["Verify", "Calibrated the threshold and tested across different ambient-light conditions."],
         ["Result", "A working alarm that triggers on presence with few false alarms."]
       ]},
-      "Banking Authentication Program": { steps: [
-        ["Problem", "Authenticate users from the command line with solid error handling."],
-        ["Design", "Wrote a C++ app that verifies credentials and handles bad input gracefully."],
-        ["Verify", "Debugged with gdb breakpoints and step-through execution against automated test scripts."],
-        ["Result", "A reliable auth program that passes its test suite."]
-      ]}
+      "Multi-Threaded Banking System": {
+        repo: "https://github.com/King1Thor/multi-threaded-banking-system",
+        gallery: [
+          { src: "assets/img/projects/banking-architecture.svg", cap: "Client/server + thread-pool architecture" }
+        ],
+        steps: [
+          ["Problem", "Serve many banking clients at once over the network without blocking or corrupting shared account data — a real systems-programming problem in concurrency, sockets, and synchronization."],
+          ["Design", "A C++ client/server architecture over TCP sockets on Linux. The server listens, accepts connections, and hands each request to a thread pool of persistent workers pulling from a task queue (instead of a thread per request). Shared account state is guarded by mutexes. Code is split into networking, finance, logging, and signal-handling modules."],
+          ["Verify", "Connected multiple concurrent clients and exercised transactions under load; mutexes prevent race conditions on shared data; signal handling guarantees a graceful shutdown with clean resource release; the logging module records runtime events for debugging."],
+          ["Result", "A concurrent, thread-safe banking server that handles simultaneous clients via a thread-pool model — the same pattern used in production backend services like web servers and fintech platforms."]
+        ]
+      },
+      "Two-Stage MOSFET Amplifier": {
+        gallery: [
+          { src: "assets/img/projects/amp-schematic.png", cap: "Multisim schematic" },
+          { src: "assets/img/projects/amp-scope.jpeg", cap: "Scope: Vin, Vout, THD ~1.9%" },
+          { src: "assets/img/projects/amp-breadboard.jpeg", cap: "Breadboard build" }
+        ],
+        steps: [
+          ["Problem", "Design, simulate, and build a two-stage MOSFET amplifier on a ±5 V supply that hits four specs at once: gain |Av| = 40, input resistance ≥ 10 kΩ, output swing ≥ 2 V into 100 Ω, and THD ≤ 8% at 4 kHz."],
+          ["Design", "Hand-calculated the full bias, picked the 20 mA tail current, solved the overdrive voltages and the allowed V_RD window, then sized every resistor. Topology: a CD4007P PMOS common-source gain stage driving a 2N7000G source-follower output with an NMOS current-source bias."],
+          ["Verify", "Modeled it in Multisim (DC operating point, AC sweep, transient, Fourier/THD), tuned the components, then built it on a breadboard and measured with a Keysight MSO-X 3024T scope and a network analyzer."],
+          ["Result", "Met every spec: simulated gain ≈ 40 V/V (measured ≈ 37), input resistance ≈ 21 kΩ, ~2 V output swing, and measured THD ≈ 3.7%, well under the 8% limit."]
+        ]
+      },
+      "Traffic Light Controller": {
+        repo: "https://github.com/King1Thor/traffic-light-controller-fsm",
+        gallery: [
+          { src: "assets/img/projects/tlc-state-diagram.png", cap: "6-state FSM (highway / farm road)" },
+          { src: "assets/img/projects/tlc-waveform.png", cap: "Simulation: state + signal timing" },
+          { src: "assets/img/projects/tlc-zybo.jpg", cap: "Running on the ZYBO Z7-10 FPGA" }
+        ],
+        steps: [
+          ["Problem", "Design a traffic-light controller for a highway/farm-road intersection that keeps the highway green by default but lets a farm-road sensor request a green, with correctly timed phases — built as an FSM in Verilog and run on real FPGA hardware."],
+          ["Design", "A 6-state Moore FSM (S0–S5) driving 2-bit highway and farm-road signals. A 31-bit counter at 50 MHz times each phase (1 / 30 / 3 / 1 / 15 / 3 s); transitions fire when the counter reaches each state's delay, and a farm-road sensor shortens the highway-green phase. n = 31 bits, sized for the longest delay (1.5×10⁹ cycles)."],
+          ["Verify", "Simulated the FSM testbench, tracing the counter, state, and the highway/farm signal buses to confirm each state drives the right lights and transitions at the right counts, then synthesized and ran it on the ZYBO Z7-10."],
+          ["Result", "A working, sensor-aware traffic-light controller on FPGA hardware, with simulation waveforms matching the designed state sequence and timing."]
+        ]
+      },
+      "4-Bit ALU": {
+        repo: "https://github.com/King1Thor/4bit-alu-breadboard-project",
+        gallery: [
+          { vid: "assets/img/projects/alu-demo.mp4", poster: "assets/img/projects/alu-demo-poster.jpg", cap: "Live 4-bit demo" },
+          { src: "assets/img/projects/alu-breadboard.jpg", cap: "Breadboard build (74-series ICs)" },
+          { src: "assets/img/projects/alu-whiteboard.jpg", cap: "Gate-level design plan" }
+        ],
+        steps: [
+          ["Problem", "Build a 4-bit ALU from discrete logic on a breadboard that performs addition, subtraction, and bitwise AND, with the operation chosen by control signals."],
+          ["Design", "A 4-bit ripple-carry adder (74HC283) with XOR gates (7486) for two's-complement subtraction, AND gates (7408) for bitwise AND, and a 2:1 MUX (74CT257) to select between the sum and AND results. Control bits c0/c1 pick AND / add / subtract; an overflow-detection equation flags signed overflow."],
+          ["Verify", "Wired the ICs on a breadboard, drove inputs with jumpers, and read results on LEDs. Checked test cases — 8+5=13, 8−5=3, 7&8=0 — and completed the two's-complement and overflow post-lab table."],
+          ["Result", "A working 4-bit ALU whose observed LED outputs matched every expected result across add, subtract, and AND operations."]
+        ]
+      }
     };
 
     function open(card) {
@@ -428,8 +491,44 @@
       elTitle.textContent = title;
       elMark.textContent = title.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
       elTags.innerHTML = tags.filter(Boolean).map(t => "<span>" + t.trim() + "</span>").join("");
-      const img = d.img || cs.img;
-      if (img) { elImg.src = img; elImg.style.display = ""; } else { elImg.style.display = "none"; elImg.removeAttribute("src"); }
+      // artifact media: image(s) and/or a demo video, with thumbnails
+      var gal = cs.gallery && cs.gallery.length ? cs.gallery : (function () {
+        var single = d.img || cs.img; return single ? [{ src: single }] : [];
+      })();
+      function stopVid() { if (elVid) { try { elVid.pause(); } catch (e) {} elVid.removeAttribute("src"); elVid.load && elVid.load(); elVid.style.display = "none"; } }
+      function showItem(g) {
+        if (g && g.vid) {
+          if (elVid) { elVid.src = g.vid; if (g.poster) elVid.poster = g.poster; elVid.style.display = ""; }
+          elImg.style.display = "none"; elImg.removeAttribute("src");
+        } else if (g && g.src) {
+          stopVid();
+          elImg.src = g.src; elImg.alt = g.cap || (title + " artifact"); elImg.style.display = "";
+        }
+      }
+      if (gal.length) {
+        showItem(gal[0]);
+        if (elThumbs) {
+          if (gal.length > 1) {
+            elThumbs.style.display = "";
+            elThumbs.innerHTML = gal.map(function (g, i) {
+              var thumbSrc = g.vid ? (g.poster || "") : g.src;
+              var isVid = g.vid ? " vid" : "";
+              return '<button type="button" class="pm-thumb' + isVid + (i === 0 ? " on" : "") + '" data-i="' + i + '" title="' + (g.cap || "") + '"><img src="' + thumbSrc + '" alt=""></button>';
+            }).join("");
+            Array.prototype.forEach.call(elThumbs.querySelectorAll(".pm-thumb"), function (b) {
+              b.addEventListener("click", function () {
+                showItem(gal[+b.dataset.i]);
+                Array.prototype.forEach.call(elThumbs.querySelectorAll(".pm-thumb"), function (x) { x.classList.remove("on"); });
+                b.classList.add("on");
+              });
+            });
+          } else { elThumbs.style.display = "none"; elThumbs.innerHTML = ""; }
+        }
+      } else {
+        elImg.style.display = "none"; elImg.removeAttribute("src");
+        stopVid();
+        if (elThumbs) { elThumbs.style.display = "none"; elThumbs.innerHTML = ""; }
+      }
       const steps = cs.steps || [];
       elSteps.innerHTML = steps.map((s, i) =>
         '<div class="pm-step"><span class="pm-sn">' + (i + 1) + '</span><div><b>' + s[0] + '</b><p>' + s[1] + '</p></div></div>').join("");
@@ -443,6 +542,7 @@
       document.body.style.overflow = "hidden";
     }
     function close() {
+      if (elVid) { try { elVid.pause(); } catch (e) {} elVid.removeAttribute("src"); elVid.load && elVid.load(); }
       modal.classList.remove("open");
       document.documentElement.classList.remove("modal-open");
       document.body.style.overflow = "";

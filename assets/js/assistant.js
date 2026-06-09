@@ -14,7 +14,7 @@
      JSON { reply }. Then set its URL below. That's the only change needed:
         const AI_ENDPOINT = "https://your-backend.com/api/assistant";
      ===================================================================== */
-  const AI_ENDPOINT = "";
+  const AI_ENDPOINT = "/api/chat";
 
   /* ---- knowledge base (offline fallback) ---- */
   const KB = [
@@ -129,11 +129,12 @@
   }
   const history = [];
   function respond(text) {
+    const prior = history.slice(-6);
     history.push({ role: "user", content: text });
     const t = typing();
     const finish = (answer) => { t.remove(); add("ai", answer); history.push({ role: "assistant", content: answer }); };
     if (AI_ENDPOINT) {
-      callLiveModel(text, history)
+      callLiveModel(text, prior)
         .then(r => finish(r || "Sorry, I didn't catch that. Ask about Ali's projects, skills, or experience."))
         .catch(() => finish(findAnswer(text)));
       return;
