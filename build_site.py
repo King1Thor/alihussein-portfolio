@@ -391,6 +391,18 @@ playground_body = """
     <p class="lead reveal show d2">Small interactive versions of the ideas behind my projects. Click, toggle, and step through them, no install required.</p>
   </header>
 
+  <!-- ARMv8 CPU DATAPATH SIMULATOR -->
+  <section style="padding-top:24px;">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div class="eyebrow">// COMPUTER ARCHITECTURE</div>
+        <h2 class="h-sec">ARMv8 datapath, live</h2>
+        <p class="lead">An interactive single-cycle ARMv8 (LEGv8) processor built from my <b>Verilog CPU project</b> — same opcode encodings and control logic. Pick an instruction, watch it decode to binary and C, then Step or Run to trace the active datapath, control signals, ALU, memory, and write-back. Click any block (ALU, control, register file&hellip;) to look inside.</p>
+      </div>
+      <div class="glass lab reveal" id="cpuSim"></div>
+    </div>
+  </section>
+
   <!-- LRU CACHE -->
   <section style="padding-top:24px;">
     <div class="wrap">
@@ -521,7 +533,7 @@ playground_body = """
 page("playground.html", "playground",
      "Playground · Ali Hussein",
      "Interactive hardware toys by Ali Hussein: a live LRU cache simulator, a logic-gate explorer, and a combination-lock finite state machine.",
-     playground_body, extra_scripts='  <script src="assets/js/playground.js"></script>\n')
+     playground_body, extra_scripts='  <script src="assets/js/playground.js"></script>\n  <script src="assets/js/cpu-sim.js"></script>\n')
 print("done playground")
 
 
