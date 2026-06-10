@@ -81,7 +81,7 @@ FOOTER = """  <footer class="site">
           <h4>Connect</h4>
           <a href="mailto:ali.hussein24@tamu.edu">ali.hussein24@tamu.edu</a>
           <a href="https://www.linkedin.com/in/ali-hussein-b13004260/" target="_blank" rel="noopener">LinkedIn &#8599;</a>
-          <a href="https://github.com/CSCE-331-Spring-2026-900-908/project1-ali.hussein24" target="_blank" rel="noopener">GitHub &#8599;</a>
+          <a href="https://github.com/King1Thor" target="_blank" rel="noopener">GitHub &#8599;</a>
           <a href="https://engineering.tamu.edu/" target="_blank" rel="noopener">TAMU Engineering &#8599;</a>
         </div>
       </div>
@@ -90,7 +90,7 @@ FOOTER = """  <footer class="site">
         <div class="socials">
           <a href="mailto:ali.hussein24@tamu.edu" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
           <a href="https://www.linkedin.com/in/ali-hussein-b13004260/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.3c0-1.26-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.8V21h-4z"/></svg></a>
-          <a href="https://github.com/CSCE-331-Spring-2026-900-908/project1-ali.hussein24" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg></a>
+          <a href="https://github.com/King1Thor" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg></a>
         </div>
       </div>
     </div>
@@ -396,8 +396,8 @@ playground_body = """
     <div class="wrap">
       <div class="sec-head reveal">
         <div class="eyebrow">// COMPUTER ARCHITECTURE</div>
-        <h2 class="h-sec">ARMv8 datapath, live</h2>
-        <p class="lead">An interactive single-cycle ARMv8 (LEGv8) processor built from my <b>Verilog CPU project</b> — same opcode encodings and control logic. Pick an instruction, watch it decode to binary and C, then Step or Run to trace the active datapath, control signals, ALU, memory, and write-back. Click any block (ALU, control, register file&hellip;) to look inside.</p>
+        <h2 class="h-sec">ARMv8 CPU Lab</h2>
+        <p class="lead">An interactive single-cycle ARMv8 (LEGv8) processor built from my <b>Verilog CPU project</b>, the same opcode encodings and control logic. Step or run an instruction to watch it move through the labeled datapath, with every mux and control signal. <b>Click any block</b> (ALU, register file, control, memory&hellip;) to drill inside: component to gates to real CMOS transistors. The second tab is a live <b>C / Assembly / Binary</b> editor where you write either side and see the others update, hover any line to trace it across all three, and flip the binary between big- and little-endian.</p>
       </div>
       <div class="glass lab reveal" id="cpuSim"></div>
     </div>
@@ -533,7 +533,7 @@ playground_body = """
 page("playground.html", "playground",
      "Playground · Ali Hussein",
      "Interactive hardware toys by Ali Hussein: a live LRU cache simulator, a logic-gate explorer, and a combination-lock finite state machine.",
-     playground_body, extra_scripts='  <script src="assets/js/playground.js"></script>\n  <script src="assets/js/cpu-sim.js"></script>\n')
+     playground_body, extra_scripts='  <script src="assets/js/playground.js"></script>\n  <script src="assets/js/cpu-lab.js"></script>\n')
 print("done playground")
 
 
@@ -760,7 +760,7 @@ contact_body = """
             <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.3c0-1.26-.02-2.9-1.77-2.9-1.77 0-2.04 1.38-2.04 2.8V21h-4z"/></svg></span>
             <span><span class="lbl">LinkedIn</span><span class="val">in/ali-hussein-b13004260 &#8599;</span></span>
           </a>
-          <a class="contact-line" href="https://github.com/CSCE-331-Spring-2026-900-908/project1-ali.hussein24" target="_blank" rel="noopener">
+          <a class="contact-line" href="https://github.com/King1Thor" target="_blank" rel="noopener">
             <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.09.68-.22.68-.49v-1.7c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.49-1.11-1.49-.91-.64.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.85.09-.66.35-1.12.63-1.38-2.22-.26-4.55-1.14-4.55-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.27 2.75 1.05a9.4 9.4 0 0 1 5 0c1.91-1.32 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.8-4.57 5.05.36.32.68.94.68 1.9v2.82c0 .27.18.59.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg></span>
             <span><span class="lbl">GitHub</span><span class="val">View repositories &#8599;</span></span>
           </a>
