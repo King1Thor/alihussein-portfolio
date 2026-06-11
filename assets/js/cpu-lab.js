@@ -77,6 +77,14 @@
     "#cpuSim .scene .blk{fill:var(--panel-2);stroke:var(--line-2);stroke-width:1.4;} #cpuSim .scene .hot{cursor:pointer;} #cpuSim .scene .hot:hover *{stroke:var(--good);}",
     "#cpuSim .scene .gate{fill:rgba(88,182,255,.07);stroke:var(--on);stroke-width:1.8;} #cpuSim .scene .tx{stroke:var(--ink);stroke-width:1.7;fill:none;} #cpuSim .scene .ttl{fill:var(--good);font-weight:700;}",
     "#cpuSim .scenehead{position:absolute;left:12px;bottom:34px;z-index:4;max-width:62%;color:var(--ink-soft);font:600 .72rem var(--mono);background:rgba(8,11,20,.72);padding:6px 10px;border-radius:9px;border:1px solid var(--line);}",
+    /* in-place expansion overlay */
+    "#cpuSim .exbg{fill:rgba(4,6,12,.5);cursor:pointer;}",
+    "#cpuSim .expanel .bg{fill:#0a1120;stroke:var(--on);stroke-width:1.6;filter:drop-shadow(0 10px 26px rgba(0,0,0,.6));}",
+    "#cpuSim .expanel .exhead{fill:#101a2c;stroke:none;}",
+    "#cpuSim .extitle{fill:var(--ink);font:700 12px var(--mono);} #cpuSim .excrumbt{fill:var(--on);cursor:pointer;}",
+    "#cpuSim .exclose circle{fill:#1a2336;} #cpuSim .exclose text{fill:#cfe0ff;} #cpuSim .exclose{cursor:pointer;}",
+    "#cpuSim .exwire{fill:none;stroke:var(--on);stroke-width:2.6;filter:drop-shadow(0 0 5px rgba(127,227,255,.55));}",
+    "#cpuSim .expin circle{fill:var(--on);} #cpuSim .expin text{fill:var(--ink-soft);font:600 9px var(--mono);} #cpuSim .expin.ctrl circle{fill:var(--good);} #cpuSim .expin.ctrl text{fill:var(--good);}",
     /* editor */
     "#cpuSim .opbar{display:flex;gap:8px;align-items:center;font:600 .7rem var(--mono);color:var(--ink-soft);margin-bottom:10px;flex-wrap:wrap;}",
     "#cpuSim .chip{cursor:pointer;border:1px solid var(--line-2);background:transparent;color:var(--ink-soft);border-radius:999px;padding:6px 12px;font:700 .7rem var(--mono);} #cpuSim .chip.on{background:var(--acc);border-color:var(--acc);color:#fff;}",
@@ -334,7 +342,7 @@
   function el(t){return document.createElementNS(NS,t);}
   function aluPts(n){var x=n.x,y=n.y,w=n.w,h=n.h;return [[x,y],[x+w,y+h*0.22],[x+w,y+h*0.78],[x,y+h],[x,y+h*0.62],[x+w*0.28,y+h/2],[x,y+h*0.38]].map(function(p){return p[0]+","+p[1];}).join(" ");}
 
-  var dpGroup=null,nodeEl={},edgeEl={};
+  var dpGroup=null,exGroup=null,nodeEl={},edgeEl={};
   function buildDatapath(){
     vp.innerHTML="";dpGroup=el("g");vp.appendChild(dpGroup);
     // grid
@@ -348,10 +356,11 @@
       if(n.s){var s2=el("text");s2.setAttribute("class","sub");s2.setAttribute("x",n.x+n.w/2);s2.setAttribute("y",n.y+n.h/2+12);s2.setAttribute("text-anchor","middle");s2.textContent=n.s;g.appendChild(s2);}
       if(n.mux){[["0",n.y+16],["1",n.y+n.h-8]].forEach(function(p){var mt=el("text");mt.setAttribute("class","musel");mt.setAttribute("x",n.x+7);mt.setAttribute("y",p[1]);mt.textContent=p[0];g.appendChild(mt);});}
       if(INFO[id]){g.addEventListener("mouseenter",function(){inspect(id);});}
-      if(n.click)g.addEventListener("click",function(ev){ev.stopPropagation();if(!panMoved)drill(n.click);});
+      if(n.click)g.addEventListener("click",function(ev){ev.stopPropagation();if(!panMoved)openEx(id,n.click);});
       gN.appendChild(g);nodeEl[id]=g;
     });
     PORTS.forEach(function(p){var t=el("text");t.setAttribute("x",p[0]);t.setAttribute("y",p[1]);t.setAttribute("class",p[3]);t.textContent=p[2];gP.appendChild(t);});
+    exGroup=el("g");exGroup.setAttribute("class","exlayer");vp.appendChild(exGroup);
   }
   function poly(p){return p.map(function(q){return q[0]+","+q[1];}).join(" ");}
 
@@ -368,22 +377,61 @@
   $("lbZout").addEventListener("click",function(){k=Math.max(0.5,k/1.2);applyVP();});
   $("lbFit").addEventListener("click",fit);
 
-  /* ===== drill stack ===== */
-  var stack=[{id:"CPU"}];
-  function setViewBox(w,h){VBW=w;VBH=h;svg.setAttribute("viewBox","0 0 "+w+" "+h);fit();}
-  function drill(id){var sc=SCENES[id];if(!sc)return;var o=sc();stack.push({id:id,title:o.title,desc:o.desc});renderScene(o);stack[stack.length-1]._o=o;syncDrillUI();}
-  function renderScene(o){vp.innerHTML='<g class="scene">'+o.scene.inner+'</g>';setViewBox(o.scene.w,o.scene.h);
-    Array.prototype.forEach.call(vp.querySelectorAll("[data-scene]"),function(g){g.addEventListener("click",function(ev){ev.stopPropagation();if(!panMoved)drill(g.getAttribute("data-scene"));});});
+  /* ===== in-place expansion ===== */
+  var ex=null;                       // {node, path:[sceneId...]}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+  function boxOf(id){var n=N[id];return {x:n.x,y:n.y,w:n.w,h:n.h,cx:n.x+n.w/2,cy:n.y+n.h/2};}
+  function inBox(p,b,m){m=m||22;return p[0]>=b.x-m&&p[0]<=b.x+b.w+m&&p[1]>=b.y-m&&p[1]<=b.y+b.h+m;}
+  function nodeAt(p,excl){var best="",bd=1e9;for(var id in N){if(id===excl)continue;var b=boxOf(id);if(inBox(p,b,8))return id;var d=Math.hypot(p[0]-b.cx,p[1]-b.cy);if(d<bd){bd=d;best=id;}}return best;}
+  function sideOf(p,b){var dx=p[0]-b.cx,dy=p[1]-b.cy;return Math.abs(dx)>=Math.abs(dy)?(dx<0?"L":"R"):(dy<0?"T":"B");}
+  var MUXNM={reg2loc:"Reg2Loc mux",alusrc:"ALUSrc mux",memtoreg:"MemToReg mux",pcsrc:"PCSrc mux"};
+  function nm(id){if(!id)return"";if(MUXNM[id])return MUXNM[id];var n=N[id];if(!n)return id;return (n.t||id)+(n.s?" "+n.s:"");}
+  var IOEXTRA={alu:[{side:"B",label:"ALUOp",neigh:"aluctrl",ctrl:1}],aluctrl:[{side:"B",label:"ALUOp",neigh:"aluctrl",ctrl:1}],regfile:[{side:"B",label:"RegWrite + Clock",neigh:"control",ctrl:1}],dmem:[{side:"B",label:"MemRead / MemWrite",neigh:"control",ctrl:1}],control:[{side:"R",label:"all control signals",neigh:"",ctrl:1}]};
+  function connectionsFor(id){var b=boxOf(id),res=[];for(var eid in E){var p=E[eid].p,a=p[0],z=p[p.length-1];var ia=inBox(a,b),iz=inBox(z,b);if(ia===iz)continue;var near=ia?a:z,far=ia?z:a;res.push({label:E[eid].l||"",near:near,far:far,side:sideOf(near,b),neigh:nodeAt(far,id),pts:p});}return res;}
+  function sceneTitle(id){return SCENES[id]().title.split(" —")[0];}
+
+  function renderEx(){
+    if(!ex)return;
+    var node=ex.node, o=SCENES[ex.path[ex.path.length-1]](), b=boxOf(node);
+    var PW=520,PH=320,px=clamp(b.cx-PW/2,168,1050-178-PW),py=clamp(b.cy-PH/2,118,500-14-PH);
+    var conns=ex.path.length===1?connectionsFor(node):[];
+    var bySide={L:[],R:[],T:[],B:[]};conns.forEach(function(c){bySide[c.side].push(c);});
+    if(ex.path.length===1)(IOEXTRA[node]||[]).forEach(function(x){bySide[x.side].push(x);});
+    var out=['<rect class="exbg" x="0" y="0" width="1050" height="500"/>'];
+    conns.forEach(function(c){out.push('<polyline class="exwire" points="'+poly(c.pts)+'"/>');});
+    out.push('<g class="expanel"><rect class="bg" x="'+px+'" y="'+py+'" width="'+PW+'" height="'+PH+'" rx="12"/><rect class="exhead" x="'+px+'" y="'+py+'" width="'+PW+'" height="30" rx="12"/>');
+    var titles=ex.path.map(sceneTitle);
+    out.push('<text class="extitle" x="'+(px+12)+'" y="'+(py+20)+'">'+titles.map(function(tt,i){return i<titles.length-1?'<tspan class="excrumbt" data-i="'+i+'">'+tt+' &#8250; </tspan>':'<tspan>'+tt+'</tspan>';}).join("")+'</text>');
+    out.push('<g class="exclose" data-close="1"><circle cx="'+(px+PW-16)+'" cy="'+(py+15)+'" r="9"/><text x="'+(px+PW-16)+'" y="'+(py+19)+'" text-anchor="middle" font-size="13">&times;</text></g>');
+    var iw=PW-28,ih=PH-50,sct=Math.min(iw/o.scene.w,ih/o.scene.h),ox=px+(PW-o.scene.w*sct)/2,oy=py+34+(ih-o.scene.h*sct)/2;
+    out.push('<g class="scene" transform="translate('+ox+','+oy+') scale('+sct+')">'+o.scene.inner+'</g></g>');
+    function pinRow(list,side){var n=list.length;list.forEach(function(c,i){var lx,ly,labx,laby,anc,frac=n>1?i/(n-1):0.5;
+      if(side==="L"){lx=px;ly=py+50+(PH-72)*frac;labx=px-8;laby=ly+3;anc="end";}
+      else if(side==="R"){lx=px+PW;ly=py+50+(PH-72)*frac;labx=px+PW+8;laby=ly+3;anc="start";}
+      else if(side==="T"){lx=px+74+(PW-148)*frac;ly=py;labx=lx;laby=py-7;anc="middle";}
+      else{lx=px+74+(PW-148)*frac;ly=py+PH;labx=lx;laby=py+PH+15;anc="middle";}
+      var txt=(c.label||"")+(c.neigh?((c.label?" ":"")+"("+nm(c.neigh)+")"):"");
+      out.push('<g class="expin'+(c.ctrl?" ctrl":"")+'"><circle cx="'+lx+'" cy="'+ly+'" r="3.2"/><text x="'+labx+'" y="'+laby+'" text-anchor="'+anc+'">'+txt+'</text></g>');});}
+    pinRow(bySide.L,"L");pinRow(bySide.R,"R");pinRow(bySide.T,"T");pinRow(bySide.B,"B");
+    exGroup.innerHTML=out.join("");
+    exGroup.querySelector(".exbg").addEventListener("click",function(){if(!panMoved)closeEx();});
+    exGroup.querySelector("[data-close]").addEventListener("click",function(ev){ev.stopPropagation();closeEx();});
+    Array.prototype.forEach.call(exGroup.querySelectorAll(".scene [data-scene]"),function(g){g.addEventListener("click",function(ev){ev.stopPropagation();if(!panMoved)pushEx(g.getAttribute("data-scene"));});});
+    Array.prototype.forEach.call(exGroup.querySelectorAll(".excrumbt"),function(t){t.addEventListener("click",function(ev){ev.stopPropagation();ex.path=ex.path.slice(0,(+t.getAttribute("data-i"))+1);renderEx();syncCrumb();});});
+    dpGroup.style.opacity=".18";
     $("lbSceneHead").style.display="";$("lbSceneHead").innerHTML="<b style='color:var(--on)'>"+o.title+"</b><br>"+o.desc;
+    syncCrumb();
   }
-  function backTo(i){while(stack.length-1>i)stack.pop();if(stack.length===1){buildDatapath();setViewBox(1050,500);$("lbSceneHead").style.display="none";paint(curProf,true);}else{var top=stack[stack.length-1];renderScene(top._o);}syncDrillUI();}
-  function syncDrillUI(){
-    $("lbCrumb").innerHTML=stack.map(function(s,i){var nm=i===0?"CPU datapath":(s.title?s.title.split(" —")[0]:s.id);return i<stack.length-1?'<a data-i="'+i+'">'+nm+'</a><span>›</span>':'<b>'+nm+'</b>';}).join("");
-    Array.prototype.forEach.call($("lbCrumb").querySelectorAll("a"),function(a){a.addEventListener("click",function(){backTo(+a.dataset.i);});});
-    $("lbBack").style.display=stack.length>1?"":"none";
-    $("lbHint").style.display=stack.length>1?"none":"";
-  }
-  $("lbBack").addEventListener("click",function(){backTo(stack.length-2);});
+  function openEx(nodeId,sceneId){if(ex&&ex.node===nodeId){closeEx();return;}stopRun();ex={node:nodeId,path:[sceneId]};renderEx();}
+  function pushEx(sceneId){if(!ex)return;ex.path.push(sceneId);renderEx();}
+  function popEx(){if(!ex)return;if(ex.path.length>1){ex.path.pop();renderEx();}else closeEx();}
+  function closeEx(){ex=null;if(exGroup)exGroup.innerHTML="";dpGroup.style.opacity="";$("lbSceneHead").style.display="none";paint(curProf,true);syncCrumb();}
+  function syncCrumb(){var top=$("lbCrumb");if(!ex){top.innerHTML="<b>CPU datapath</b>";$("lbBack").style.display="none";$("lbHint").style.display="";return;}
+    var titles=ex.path.map(sceneTitle);
+    top.innerHTML='<a data-c="-1">CPU datapath</a><span>&#8250;</span>'+titles.map(function(tt,i){return i<titles.length-1?'<a data-c="'+i+'">'+tt+'</a><span>&#8250;</span>':'<b>'+tt+'</b>';}).join("");
+    Array.prototype.forEach.call(top.querySelectorAll("a"),function(a){a.addEventListener("click",function(){var c=+a.getAttribute("data-c");if(c<0)closeEx();else{ex.path=ex.path.slice(0,c+1);renderEx();}});});
+    $("lbBack").style.display="";$("lbHint").style.display="none";}
+  $("lbBack").addEventListener("click",popEx);
 
   /* ===== state ===== */
   function fresh(){var reg=new Array(32).fill(0);var seed={1:0,2:10,3:4,4:7,5:20,6:9,7:5,9:0,10:0,11:0,20:64,21:8};for(var key in seed)reg[+key]=seed[key];reg[31]=0;return{reg:reg,mem:[100,200,300,400,500,600,700,800],changed:null,memChanged:null};}
@@ -407,7 +455,7 @@
   function inspect(id){var n=INFO[id];if(!n)return;Array.prototype.forEach.call(svg.querySelectorAll(".nd.sel"),function(g){g.classList.remove("sel");});if(nodeEl[id])nodeEl[id].classList.add("sel");$("lbInsp").innerHTML='<b>'+n.t+'</b><br>'+n.d+'<br><span class="io">'+n.io+'</span>';}
   function renderStages(){$("lbStages").innerHTML=curProf.seq.map(function(s,i){return '<span class="schip" data-s="'+i+'">'+(i+1)+'. '+s+'</span>';}).join("");}
 
-  function refresh(){cur.mn=instSel.value;cur.ops=readOps();curProf=profile(cur.mn);stageIdx=-1;renderDetails();renderStages();if(stack.length===1)paint(curProf,true);}
+  function refresh(){cur.mn=instSel.value;cur.ops=readOps();curProf=profile(cur.mn);stageIdx=-1;renderDetails();renderStages();if(!ex)paint(curProf,true);}
 
   /* ===== animation ===== */
   function paint(prof,full){
@@ -416,18 +464,18 @@
     Array.prototype.forEach.call(svg.querySelectorAll(".elab"),function(t){t.classList.toggle("act",full&&prof.edges.indexOf(t.getAttribute("data-for"))>=0);});
   }
   function stageElems(prof,i){var ns=prof.nodes.slice().sort(function(a,b){return N[a].x-N[b].x;});var per=Math.ceil(ns.length/prof.seq.length);var nodes=ns.slice(i*per,i*per+per);var lo=i/prof.seq.length*1050,hi=(i+1)/prof.seq.length*1050;var edges=prof.edges.filter(function(eid){var mx=E[eid].p[0][0];return mx>=lo-150&&mx<=hi+240;});return {nodes:nodes,edges:edges};}
-  function showStage(i){if(stack.length>1)return;stageIdx=i;paint(curProf,false);for(var s=0;s<=i;s++){var se=stageElems(curProf,s);se.nodes.forEach(function(id){if(nodeEl[id])nodeEl[id].classList.add("act");});se.edges.forEach(function(id){if(edgeEl[id])edgeEl[id].classList.add(s===i?"pulse":"act");});}Array.prototype.forEach.call(svg.querySelectorAll(".elab"),function(t){t.classList.toggle("act",curProf.edges.indexOf(t.getAttribute("data-for"))>=0);});
+  function showStage(i){if(ex)return;stageIdx=i;paint(curProf,false);for(var s=0;s<=i;s++){var se=stageElems(curProf,s);se.nodes.forEach(function(id){if(nodeEl[id])nodeEl[id].classList.add("act");});se.edges.forEach(function(id){if(edgeEl[id])edgeEl[id].classList.add(s===i?"pulse":"act");});}Array.prototype.forEach.call(svg.querySelectorAll(".elab"),function(t){t.classList.toggle("act",curProf.edges.indexOf(t.getAttribute("data-for"))>=0);});
     Array.prototype.forEach.call($("lbStages").children,function(ch,idx){ch.classList.toggle("on",idx===i);ch.classList.toggle("done",idx<i);});
     if(i===curProf.seq.length-1)commit();
   }
   function commit(){var r=ISA[cur.mn].ex(S,cur.ops);S.changed=null;S.memChanged=null;if(r.reg!=null&&r.reg!==31){S.reg[r.reg]=r.val|0;S.changed=r.reg;if(nodeEl.regfile)nodeEl.regfile.classList.add("wr");}if(r.mem!=null){S.mem[r.mem]=r.val|0;S.memChanged=r.mem;if(nodeEl.dmem)nodeEl.dmem.classList.add("wr");}renderState();}
   var runT=null;function stopRun(){if(runT){clearInterval(runT);runT=null;}}
-  $("lbStep").addEventListener("click",function(){if(stack.length>1)return;if(stageIdx>=curProf.seq.length-1){refresh();return;}showStage(stageIdx+1);});
-  $("lbRun").addEventListener("click",function(){if(stack.length>1)return;stopRun();refresh();var i=0;runT=setInterval(function(){if(i>=curProf.seq.length){stopRun();return;}showStage(i);i++;},850);});
-  $("lbReset").addEventListener("click",function(){stopRun();S=fresh();backTo(0);refresh();});
+  $("lbStep").addEventListener("click",function(){if(ex)return;if(stageIdx>=curProf.seq.length-1){refresh();return;}showStage(stageIdx+1);});
+  $("lbRun").addEventListener("click",function(){if(ex)return;stopRun();refresh();var i=0;runT=setInterval(function(){if(i>=curProf.seq.length){stopRun();return;}showStage(i);i++;},850);});
+  $("lbReset").addEventListener("click",function(){stopRun();S=fresh();closeEx();refresh();});
 
-  catSel.addEventListener("change",function(){fillInst(catSel.value);buildOps(instSel.value);backTo(0);refresh();});
-  instSel.addEventListener("change",function(){stopRun();buildOps(instSel.value);backTo(0);refresh();});
+  catSel.addEventListener("change",function(){fillInst(catSel.value);buildOps(instSel.value);closeEx();refresh();});
+  instSel.addEventListener("change",function(){stopRun();buildOps(instSel.value);closeEx();refresh();});
 
   /* tabs */
   Array.prototype.forEach.call(document.querySelectorAll("#cpuSim .lab-tab"),function(t){t.addEventListener("click",function(){Array.prototype.forEach.call(document.querySelectorAll("#cpuSim .lab-tab"),function(x){x.classList.remove("on");});Array.prototype.forEach.call(document.querySelectorAll("#cpuSim .lab-pane"),function(x){x.classList.remove("on");});t.classList.add("on");document.querySelector('#cpuSim .lab-pane[data-pane="'+t.dataset.pane+'"]').classList.add("on");});});
@@ -443,7 +491,7 @@
   function bindHover(){Array.prototype.forEach.call(document.querySelectorAll("#cpuSim .rows .r"),function(r){r.addEventListener("mouseenter",function(){hil(+r.dataset.i);});r.addEventListener("mouseleave",clearHil);r.addEventListener("click",function(){pickLine(+r.dataset.i);});});}
   function hil(i){clearHil();Array.prototype.forEach.call(document.querySelectorAll('#cpuSim .rows .r[data-i="'+i+'"]'),function(r){r.classList.add("hl");});var bar=editLang==="asm"?$("aHl"):$("cHl");var body=editLang==="asm"?$("aBody"):$("cBody");if(bar&&body){bar.style.display="block";bar.style.top=(i*LH+6-body.scrollTop)+"px";}}
   function clearHil(){Array.prototype.forEach.call(document.querySelectorAll("#cpuSim .rows .r.hl"),function(r){r.classList.remove("hl");});$("aHl").style.display="none";$("cHl").style.display="none";}
-  function pickLine(i){var p=prog[i];if(!p||!p.ok)return;catSel.value=ISA[p.mn].cat;fillInst(ISA[p.mn].cat);instSel.value=p.mn;buildOps(p.mn);cur.schema.forEach(function(f){var e=$("op_"+f[0]);if(e&&p.ops[f[0]]!=null)e.value=p.ops[f[0]];});backTo(0);refresh();$("lbPick").innerHTML='Loaded <b style="color:var(--on)">'+esc(p.asm.trim())+'</b> into the Datapath tab.';}
+  function pickLine(i){var p=prog[i];if(!p||!p.ok)return;catSel.value=ISA[p.mn].cat;fillInst(ISA[p.mn].cat);instSel.value=p.mn;buildOps(p.mn);cur.schema.forEach(function(f){var e=$("op_"+f[0]);if(e&&p.ops[f[0]]!=null)e.value=p.ops[f[0]];});closeEx();refresh();$("lbPick").innerHTML='Loaded <b style="color:var(--on)">'+esc(p.asm.trim())+'</b> into the Datapath tab.';}
   $("aText").addEventListener("input",function(){if(editLang==="asm")recompute();});
   $("cText").addEventListener("input",function(){if(editLang==="c")recompute();});
   $("lbEditAsm").addEventListener("click",function(){editLang="asm";this.classList.add("on");$("lbEditC").classList.remove("on");if(!$("aText").value.trim())$("aText").value=DEMO;recompute();});
@@ -452,5 +500,5 @@
   $("lbEndLit").addEventListener("click",function(){endian="little";this.classList.add("on");$("lbEndBig").classList.remove("on");renderRows();});
 
   /* ============================== INIT ================================== */
-  buildDatapath();buildOps("ADD");refresh();$("aText").value=DEMO;recompute();syncDrillUI();
+  buildDatapath();buildOps("ADD");refresh();$("aText").value=DEMO;recompute();syncCrumb();
 })();
