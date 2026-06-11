@@ -397,7 +397,7 @@ playground_body = """
       <div class="sec-head reveal">
         <div class="eyebrow">// COMPUTER ARCHITECTURE</div>
         <h2 class="h-sec">ARMv8 CPU Lab</h2>
-        <p class="lead">An interactive single-cycle ARMv8 (LEGv8) processor in <b>real 3D</b>, built from my <b>Verilog CPU project</b> with the same opcode encodings and control logic. Drag to orbit, scroll to zoom, and <b>click any component to fly inside it</b> &mdash; the ALU opens into a full adder, then logic gates, then real CMOS transistors, all in one scene. Step or Run to watch an instruction flow along the active datapath. The second tab is a live <b>C / Assembly / Binary</b> editor: write either side and the others update, hover any line to trace it across all three, and flip the binary between big- and little-endian.</p>
+        <p class="lead">An interactive single-cycle ARMv8 (LEGv8) processor, built from my <b>Verilog CPU project</b> with the same opcode encodings and control logic. Pick any instruction to see its assembly, colored binary fields, control signals, and C equivalent, then Step or Auto-run to watch it light up the active path through the datapath. Drag to pan, scroll to zoom, and click any component to open it in place: the ALU expands into a full adder, then logic gates, then real CMOS transistors with gate, source, and drain terminals. The register file, control unit, memory with cache, and sign-extend all open the same way. A second tab is a live <b>C / Assembly / Binary</b> editor with two-way translation and big or little-endian output.</p>
       </div>
       <div class="glass lab reveal" id="cpuSim"></div>
     </div>
