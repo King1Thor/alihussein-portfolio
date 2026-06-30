@@ -81,7 +81,9 @@
   }
 
   function run(canvas, cfg, pData, dData, pw, ph) {
-    var T = root.THREE, W = root.innerWidth, H = root.innerHeight;
+    var T = root.THREE;
+    function box(){ return [canvas.clientWidth || root.innerWidth, canvas.clientHeight || root.innerHeight]; }
+    var _wh = box(), W = _wh[0], H = _wh[1];
     var SP = 0.16; // spacing between particles in world units
     var bg = [pData[0], pData[1], pData[2]];
     var pos = [], scat = [], col = [], rnd = [];
@@ -109,7 +111,7 @@
     var scene = new T.Scene(); scene.fog = new T.FogExp2(0x05070d, 0.012);
     var camera = new T.PerspectiveCamera(50, W / H, 0.1, 600); camera.position.set(0, 0, 52);
     var renderer = new T.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(root.devicePixelRatio || 1, 2)); renderer.setSize(W, H); renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(root.devicePixelRatio || 1, 2)); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
 
     var uni = { uTime: { value: 0 }, uProg: { value: 0 }, uSize: { value: cfg.pointSize }, uDepth: { value: cfg.depthScale }, uPix: { value: renderer.getPixelRatio() }, uFade: { value: 1 } };
     var mat = new T.ShaderMaterial({
@@ -141,7 +143,7 @@
       var span = fadeEl ? fadeEl.offsetHeight : root.innerHeight;
       prog = Math.min(1, Math.max(0, (window.scrollY || window.pageYOffset || 0) / Math.max(1, span)));
     }
-    function onResize() { W = root.innerWidth; H = root.innerHeight; camera.aspect = W / H; camera.updateProjectionMatrix(); renderer.setSize(W, H); }
+    function onResize() { var w2=box(); W=w2[0]; H=w2[1]; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H,false); }
     root.addEventListener("scroll", onScroll, { passive: true });
     root.addEventListener("resize", onResize);
     if (!cfg.reduce) root.addEventListener("mousemove", function (e) { mouse.x = e.clientX / root.innerWidth - 0.5; mouse.y = e.clientY / root.innerHeight - 0.5; });

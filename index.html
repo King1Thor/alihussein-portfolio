@@ -13,6 +13,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/css/main.css">
+  <!-- hero particle portrait: layering so the cloud sits behind the hero text -->
+  <style>
+    .hero{position:relative;}
+    #heroParticles{position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none;}
+    .hero > .wrap{position:relative; z-index:3;}
+    .hero > .scrollcue{z-index:3;}
+  </style>
   <script>try{if(localStorage.getItem('ah_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 </head>
 <body>
@@ -61,6 +68,7 @@
 
   <!-- HERO -->
   <header class="hero">
+    <canvas id="heroParticles"></canvas>
     <div class="hero-bigtype" aria-hidden="true">
       <span class="fill">ALI HUSSEIN</span>
       <span>COMPUTER ENG</span>
@@ -389,5 +397,22 @@
   <script src="assets/js/hero3d.js"></script>
   <script src="assets/js/assistant.js"></script>
   <script src="assets/js/app.js"></script>
+
+  <!-- hero particle portrait -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="assets/js/hero-particles.js"></script>
+  <script>
+    HeroParticles.init({
+      canvas:   "#heroParticles",
+      portrait: "assets/img/profile.jpeg",       // already in your repo; swap to a cleaner cutout later
+      // depth: "assets/img/hero-portrait-depth.png",  // add this once you generate a depth map
+      fadeWith: ".hero",
+      density:  2,
+      depthScale: 9,
+      pointSize: 1.3,
+      spin:     0.10,
+      dropBg:   0
+    });
+  </script>
 </body>
 </html>
