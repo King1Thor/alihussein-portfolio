@@ -13,12 +13,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/css/main.css">
-  <!-- hero particle portrait: layering so the cloud sits behind the hero text -->
+  <!-- 3D particle head hero (light) -->
   <style>
-    .hero{position:relative;}
-    #heroParticles{position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none;}
+    .hero{position:relative; overflow:hidden; background:linear-gradient(180deg,#f7f9fc 0%,#e9eef5 100%);}
+    #heroHead{position:absolute; top:0; right:0; width:62%; height:100%; z-index:1; pointer-events:none;}
+    @media(max-width:900px){ #heroHead{width:100%; opacity:.55;} }
     .hero > .wrap{position:relative; z-index:3;}
-    .hero > .scrollcue{z-index:3;}
+    .hero .hero-bigtype{display:none;}
+    .hero .hero-visual{display:none;}
+    .hero .hero-copy h1{color:#0f1722;}
+    .hero .hero-copy .lead{color:#43516a;}
+    .hero .hero-copy .lead b{color:#0f1722;}
+    .hero .type{color:#1f6fd6;}
+    .hero .hero-stats .num{color:#0f1722;}
+    .hero .hero-stats .lbl{color:#5b6a7e;}
+    .hero .scrollcue{color:#5b6a7e; z-index:3;}
+    .hero .scrollcue .line{background:#5b6a7e;}
+    .hero .btn-ghost{color:#0f1722; border-color:#c3ccda;}
   </style>
   <script>try{if(localStorage.getItem('ah_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 </head>
@@ -68,7 +79,7 @@
 
   <!-- HERO -->
   <header class="hero">
-    <canvas id="heroParticles"></canvas>
+    <canvas id="heroHead"></canvas>
     <div class="hero-bigtype" aria-hidden="true">
       <span class="fill">ALI HUSSEIN</span>
       <span>COMPUTER ENG</span>
@@ -398,20 +409,16 @@
   <script src="assets/js/assistant.js"></script>
   <script src="assets/js/app.js"></script>
 
-  <!-- hero particle portrait -->
+  <!-- 3D particle head -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="assets/js/hero-particles.js"></script>
+  <script src="assets/js/hero-head-3d.js"></script>
   <script>
-    HeroParticles.init({
-      canvas:   "#heroParticles",
-      portrait: "assets/img/hero-portrait.png",        // cutout with transparent background
-      depth:    "assets/img/hero-portrait-depth.png",  // grayscale depth map (bright = near)
+    HeroHead3D.init({
+      canvas:   "#heroHead",
+      data:     "assets/data/head-points.bin",   // your Avaturn head, sampled to particles
       fadeWith: ".hero",
-      density:  2,
-      depthScale: 12,
-      pointSize: 1.4,
-      turn:     0.75,
-      tint:     0.4
+      turn:     1.5,
+      pointSize: 1.4
     });
   </script>
 </body>
