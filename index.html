@@ -13,6 +13,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/css/main.css">
+  <!-- 3D particle head: place it in the hero (dark), replacing the ring visual -->
+  <style>
+    .hero{position:relative; overflow:hidden;}
+    #heroHead{position:absolute; top:0; right:0; width:58%; height:100%; z-index:1; pointer-events:none;}
+    @media(max-width:900px){ #heroHead{width:100%; opacity:.5;} }
+    .hero > .wrap{position:relative; z-index:3;}
+    .hero .hero-visual{display:none;}
+  </style>
   <script>try{if(localStorage.getItem('ah_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 </head>
 <body>
@@ -61,6 +69,7 @@
 
   <!-- HERO -->
   <header class="hero">
+    <canvas id="heroHead"></canvas>
     <div class="hero-bigtype" aria-hidden="true">
       <span class="fill">ALI HUSSEIN</span>
       <span>COMPUTER ENG</span>
@@ -389,5 +398,21 @@
   <script src="assets/js/hero3d.js"></script>
   <script src="assets/js/assistant.js"></script>
   <script src="assets/js/app.js"></script>
+
+  <!-- 3D particle head -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="assets/js/hero-head-3d.js"></script>
+  <script>
+    HeroHead3D.init({
+      canvas:   "#heroHead",
+      data:     "assets/data/head-points.bin",
+      fadeWith: ".hero",
+      glow:     true,     // additive glow (white/steel) — matches the reference on dark
+      mono:     true,     // set false to use your real skin/hair colors instead
+      turn:     1.4,
+      tex:      "assets/img/particle-texture.jpg",
+      pointSize: 1.5
+    });
+  </script>
 </body>
 </html>

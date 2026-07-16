@@ -1,7 +1,5 @@
-/* hero-head-3d.js — true-3D COLORED particle head (light-theme friendly).
-   Reads a baked point file of 9 floats/point: pos(3) color(3) normal(3).
-   Head turns and dissolves on scroll. Solid (non-glow) blending so it reads on light.
-   HeroHead3D.init({canvas,data|embedded,fadeWith,turn,pointSize,density,glow}) */
+/* hero-head-3d.js — true-3D particle head from a baked point file (pos,color,normal).
+   Turns and dissolves on scroll. mono+glow gives the white/steel look on dark. */
 (function(root){
 "use strict";
 root.HeroHead3D={init:init};
@@ -11,10 +9,11 @@ function init(opt){
   try{var t=document.createElement("canvas"); if(!(t.getContext("webgl")||t.getContext("experimental-webgl")))throw 0;}catch(e){return;}
   var reduce=root.matchMedia&&root.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var mobile=root.innerWidth<760;
-  var cfg={turn:opt.turn!=null?opt.turn:1.3, pointSize:(opt.pointSize||1.8)*(mobile?1.15:1),
+  var cfg={turn:opt.turn!=null?opt.turn:1.3, pointSize:(opt.pointSize||1.5)*(mobile?1.15:1),
     fadeWith:opt.fadeWith||null, reduce:reduce, stride:(opt.density||1)*(mobile?2:1),
-    glow:!!opt.glow};
-  function go(f32){ try{ run(canvas,cfg,f32);}catch(e){ if(root.console)console.error("[hero-head-3d]",e);} }
+    glow:opt.glow!==false, mono:opt.mono!==false, tex:opt.tex||null};
+  function go(f){ try{ run(canvas,cfg,f);}catch(e){ if(root.console)console.error("[hero-head-3d]",e);} }
+  if(cfg.tex){ cfg._tex=new root.THREE.TextureLoader().load(cfg.tex); }
   if(opt.embedded){ go(opt.embedded); }
   else { fetch(opt.data||"assets/data/head-points.bin").then(function(r){return r.arrayBuffer();})
          .then(function(b){ go(new Float32Array(b)); }).catch(function(e){ if(root.console)console.error(e); }); }
@@ -40,8 +39,8 @@ function run(canvas,cfg,f32){
   var camera=new T.PerspectiveCamera(42,W/H,0.01,100); camera.position.set(0,0,2.7);
   var renderer=new T.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(root.devicePixelRatio||1,2)); renderer.setSize(W,H,false); renderer.setClearColor(0x000000,0);
-  var uni={uTime:{value:0},uProg:{value:0},uYaw:{value:0},uSize:{value:cfg.pointSize},uFade:{value:1},uPix:{value:renderer.getPixelRatio()}};
-  var mat=new T.ShaderMaterial({uniforms:uni,transparent:true,depthTest:true,depthWrite:true,
+  var uni={uTime:{value:0},uProg:{value:0},uYaw:{value:0},uSize:{value:cfg.pointSize},uFade:{value:1},uMono:{value:cfg.mono?1:0},uPix:{value:renderer.getPixelRatio()},uTex:{value:cfg._tex||null},uHasTex:{value:cfg._tex?1:0}};
+  var mat=new T.ShaderMaterial({uniforms:uni,transparent:true,depthTest:!cfg.glow,depthWrite:!cfg.glow,
     blending:cfg.glow?T.AdditiveBlending:T.NormalBlending,
     vertexShader:[
       "attribute vec3 aScatter; attribute vec3 aColor; attribute vec3 aNormal; attribute vec2 aRnd;",
@@ -49,7 +48,7 @@ function run(canvas,cfg,f32){
       "varying vec3 vColor; varying float vSh;",
       "mat3 rotY(float a){float s=sin(a),c=cos(a);return mat3(c,0.,-s, 0.,1.,0., s,0.,c);}",
       "void main(){ mat3 R=rotY(uYaw); vec3 hp=R*position; vec3 hn=R*aNormal;",
-      " vColor=aColor; vSh=clamp(0.5+0.6*hn.z,0.25,1.15);",
+      " vColor=aColor; vSh=clamp(0.5+0.6*hn.z,0.25,1.2);",
       " float e=uProg*uProg*(3.0-2.0*uProg);",
       " vec3 p=mix(hp,aScatter,e);",
       " float sw=e*6.2831*aRnd.x+uTime*0.2*e; float s=sin(sw),c=cos(sw); p.xy=mat2(c,-s,s,c)*p.xy;",
@@ -59,10 +58,15 @@ function run(canvas,cfg,f32){
       " gl_PointSize=uSize*uPix*(7.0/-mv.z)*show; }"
     ].join("\n"),
     fragmentShader:[
-      "uniform float uFade; varying vec3 vColor; varying float vSh;",
-      "void main(){ vec2 d=gl_PointCoord-vec2(0.5); float r=dot(d,d); if(r>0.25) discard;",
-      " float a=smoothstep(0.25,0.02,r)*uFade;",
-      " gl_FragColor=vec4(vColor*vSh, a); }"
+      "uniform float uFade,uMono,uHasTex; uniform sampler2D uTex; varying vec3 vColor; varying float vSh;",
+      "void main(){ vec2 d=gl_PointCoord-vec2(0.5); float r=dot(d,d);",
+      " float soft=smoothstep(0.25,0.02,r);",
+      " float spr=texture2D(uTex, gl_PointCoord).r;",
+      " float mask=mix(soft, spr, uHasTex); if(mask<0.02) discard;",
+      " float a=mask*uFade;",
+      " vec3 mono=mix(vec3(0.95,0.97,1.0), vec3(0.5,0.72,1.0), 0.4)*vSh;",
+      " vec3 col=mix(vColor*vSh, mono, uMono);",
+      " gl_FragColor=vec4(col, a); }"
     ].join("\n")});
   var points=new T.Points(geom,mat); scene.add(points);
   var prog=0,mx=0,mlx=0;
